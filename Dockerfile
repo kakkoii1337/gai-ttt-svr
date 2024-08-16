@@ -20,19 +20,14 @@ RUN apt update && apt install -y curl \
 ENV PATH="/root/.local/bin:${PATH}"
 RUN poetry config virtualenvs.create false
 
-## Step 2: Copy pre-built wheels from build
-WORKDIR /app/wheels
-COPY --from=build /app/wheels/exllamav2-*.whl /app/wheels/
+## Step 2: Install exllamav2
+RUN pip install https://github.com/turboderp/exllamav2/releases/download/v0.1.8/exllamav2-0.1.8+cu121.torch2.2.2-cp310-cp310-linux_x86_64.whl
 
 # Step 3: Copy Source Code
 WORKDIR /app
 COPY src/gai/ttt src/gai/ttt
 COPY pyproject.toml.docker ./pyproject.toml
-COPY poetry.lock .
-
-# Step 4: Install from wheel
-RUN poetry build -f wheel
-RUN pip install dist/*.whl
+RUN poetry install
 
 # Step 5: Startup
 RUN echo '{"app_dir":"/app/.gai"}' > /root/.gairc
