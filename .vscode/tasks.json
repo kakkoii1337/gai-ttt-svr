@@ -1,0 +1,45 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Docker: build",
+            "type": "shell",
+            "command": "/bin/bash",
+            "args": [
+                "-c",
+                "python ${workspaceFolder}/.vscode/devops_cli.py docker-build gai-ttt"
+            ],
+            "problemMatcher": []
+        },
+        {
+            "label": "Docker: push",
+            "type": "shell",
+            "command": "/bin/bash",
+            "args": [
+                "-c",
+                "python ${workspaceFolder}/.vscode/devops_cli.py docker-push gai-ttt"
+            ],
+            "problemMatcher": []
+        },
+        {
+            "label": "Docker: run",
+            "type": "shell",
+            "command": "/bin/bash",
+            "args": [
+                "-c",
+                "python ${workspaceFolder}/.vscode/devops_cli.py docker-run gai-ttt"
+            ],
+            "problemMatcher": []
+        },
+        {
+            "label": "Docker: stop",
+            "type": "shell",
+            "command": "/bin/bash",
+            "args": [
+                "-c",
+                "python ${workspaceFolder}/.vscode/devops_cli.py docker-stop gai-ttt"
+            ],
+            "problemMatcher": []
+        },
+    ]
+}

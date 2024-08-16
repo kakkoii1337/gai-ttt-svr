@@ -46,8 +46,7 @@ tokenizers = ">=0.19,<0.20"
 torchvision = "0.17.0"
 transformers = "^4.44.0"
 uvicorn = "^0.23.2"
-gai-sdk = { path ="..", develop=true }
-exllamav2 = { file = "./wheels/exllamav2-0.1.4-cp310-cp310-linux_x86_64.whl"}
+gai-sdk = "^0.222"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.3.2"

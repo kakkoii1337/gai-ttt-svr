@@ -40,7 +40,7 @@ class ChatCompletionRequest(BaseModel):
     stream: Optional[bool] = False
     tools: Optional[list] = None
     tool_choice: Optional[str] = None
-    response_model: Optional[dict] = None    
+    json_schema: Optional[dict] = None    
     max_new_tokens: Optional[int] = None
     stop_conditions: Optional[list] = None
     temperature: Optional[float] = None
@@ -58,7 +58,7 @@ async def _text_to_text(req: ChatCompletionRequest = Body(...)):
             stream=req.stream,
             tools=req.tools,
             tool_choice=req.tool_choice,
-            response_model=req.response_model,
+            json_schema=req.json_schema,
             max_new_tokens=req.max_new_tokens,
             stop_conditions=req.stop_conditions,
             temperature=req.temperature,

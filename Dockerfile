@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1.2
 
-FROM kakkoii1337/torch2.2.0-cuda12.1-ubuntu22.04-base as build
+FROM kakkoii1337/torch2.2.0-cuda12.1-ubuntu22.04-base:latest as build
 
 
 # Build Final ----------------------------------------------------------------------------------------

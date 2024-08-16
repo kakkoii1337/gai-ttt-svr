@@ -1,0 +1,26 @@
+{
+	"build": {
+		"dockerfile": "Dockerfile"
+	},
+	"runArgs": [
+		"--gpus=all"
+	],
+	"mounts": [
+		"source=${localEnv:HOME}/.gai,target=/root/.gai,type=bind,consistency=cached",
+		"source=${localEnv:HOME}/.cache,target=/root/.cache,type=bind,consistency=cached"
+	],
+	"customizations": {
+		"vscode": {
+			"settings": {
+				"terminal.integrated.shell.linux": "/bin/bash"
+			},
+			"extensions": [
+				"ms-python.python",
+				"ms-toolsai.jupyter"
+			]
+		}
+	},
+	"forwardPorts": [],
+	"postCreateCommand": "poetry install",
+	"remoteUser": "root"
+}

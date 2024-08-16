@@ -116,7 +116,7 @@ class GaiExLlamav2:
         return self
 
     # Configure JSON Schema enforcement for tool call and response model
-    def prepare_filters(self, tools, tool_choice, response_model):
+    def prepare_filters(self, tools, tool_choice, json_schema):
         """
         1. tool_choice always takes precedence over schema.
            If schema is required, then tool_choice must be set to "none".
@@ -153,13 +153,13 @@ class GaiExLlamav2:
             self.validation_schema=get_tools_schema()
             return create_filter(validation_schema=self.validation_schema, tokenizer=self.tokenizer)        
 
-        if (self.is_using_response_model(self.job_state)):
+        if (self.is_using_json_schema(self.job_state)):
             # If user_defined schema, apply user_defined schema
-            self.validation_schema=response_model
+            self.validation_schema=json_schema
             return create_filter(validation_schema=self.validation_schema, tokenizer=self.tokenizer)
 
     # Configure intermediate prompts for tool call and response model formatted for the underlying LLM
-    def prepare_prompt(self, messages, response_model, tools, tool_choice, stream):
+    def prepare_prompt(self, messages, json_schema, tools, tool_choice, stream):
         formatted_messages = messages
 
         if (self.is_using_tools(self.job_state)):
@@ -170,29 +170,29 @@ class GaiExLlamav2:
                 tools=tools,
                 tool_choice=tool_choice)
             
-        if (self.is_using_response_model(self.job_state)):
+        if (self.is_using_json_schema(self.job_state)):
 
             # Add system_message to use schema (response model) if tool_call are not applicable
             from gai.lib.common.generators_utils import apply_schema_prompt
             formatted_messages = apply_schema_prompt(messages=formatted_messages,
-                schema=response_model)
+                schema=json_schema)
 
         prompt_format = self.gai_config.get("prompt_format")
         from gai.lib.common.generators_utils import format_list_to_prompt
         return format_list_to_prompt(messages=formatted_messages, format_type=prompt_format, stream=stream)
     
     def is_validation_required(self,job_state):
-        return self.is_using_tools(job_state) or self.is_using_response_model(job_state)
+        return self.is_using_tools(job_state) or self.is_using_json_schema(job_state)
 
     # tools are only used when tool_choice is "required" and tools are available
     def is_using_tools(self,job_state):
         using_tools = (job_state["tool_choice"]=="required" and job_state["tools"])
         return using_tools
 
-    # response model is only used when tool_choice is none and response_model is available
-    def is_using_response_model(self,job_state):
-        using_response_model = ((job_state["tool_choice"]=="none" or job_state["tool_choice"]=="auto") and job_state["response_model"])
-        return using_response_model
+    # response model is only used when tool_choice is none and json_schema is available
+    def is_using_json_schema(self,job_state):
+        using_json_schema = ((job_state["tool_choice"]=="none" or job_state["tool_choice"]=="auto") and job_state["json_schema"])
+        return using_json_schema
 
     @profile_function
     def generate(self):
@@ -223,7 +223,7 @@ class GaiExLlamav2:
                     }
                     validate(instance=jsoned, schema=self.validation_schema)
 
-                if (self.is_using_response_model(self.job_state)):
+                if (self.is_using_json_schema(self.job_state)):
                     jsoned=json.loads(result["full_completion"])
                     validate(instance=jsoned, schema=self.validation_schema)
 
@@ -272,12 +272,12 @@ class GaiExLlamav2:
         from exllamav2.generator import ExLlamaV2DynamicJob
         settings.filters = self.prepare_filters(tools=self.job_state["tools"], 
                                                      tool_choice=self.job_state["tool_choice"],
-                                                     response_model=self.job_state["response_model"])
+                                                     json_schema=self.job_state["json_schema"])
         if settings.filters:
             logger.info(f"GaiExLlamav2.load_job: apply filters.")
             settings.temperature=0
         prompt=self.prepare_prompt(messages=self.job_state["messages"],
-                                   response_model=self.job_state["response_model"],
+                                   json_schema=self.job_state["json_schema"],
                                    tools=self.job_state["tools"],
                                    tool_choice=self.job_state["tool_choice"],
                                    stream=True)
@@ -318,7 +318,7 @@ class GaiExLlamav2:
         stream:Optional[bool], 
         tools:Optional[list]=None,
         tool_choice:Optional[str]=None,
-        response_model=None,
+        json_schema=None,
         max_new_tokens:Optional[int]=None,
         stop_conditions:Optional[list]=None,
         temperature:Optional[float]=None,
@@ -333,7 +333,7 @@ class GaiExLlamav2:
             "messages": messages,
             "stream": stream,
             "tools": tools,
-            "response_model": response_model,
+            "json_schema": json_schema,
             "tool_choice": tool_choice or self.gai_config["tool_choice"],
             "stop_conditions": stop_conditions or self.gai_config["stop_conditions"],
             "prompt_format": self.gai_config["prompt_format"],
@@ -352,7 +352,7 @@ class GaiExLlamav2:
         stream:Optional[bool], 
         tools:Optional[list]=None,
         tool_choice:Optional[str]=None,
-        response_model=None,
+        json_schema=None,
         max_new_tokens:Optional[int]=None,
         stop_conditions:Optional[list]=None,
         temperature:Optional[float]=None,
@@ -367,7 +367,7 @@ class GaiExLlamav2:
             stream=stream,
             tools=tools,
             tool_choice=tool_choice,
-            response_model=response_model,
+            json_schema=json_schema,
             max_new_tokens=max_new_tokens,
             stop_conditions=stop_conditions,
             temperature=temperature,
