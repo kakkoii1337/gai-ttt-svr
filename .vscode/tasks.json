@@ -7,7 +7,7 @@
             "command": "/bin/bash",
             "args": [
                 "-c",
-                "python ${workspaceFolder}/.vscode/devops_cli.py docker-build gai-ttt"
+                "cd ${workspaceFolder}/.vscode && python docker_build.py"
             ],
             "problemMatcher": []
         },
@@ -17,7 +17,7 @@
             "command": "/bin/bash",
             "args": [
                 "-c",
-                "python ${workspaceFolder}/.vscode/devops_cli.py docker-push gai-ttt"
+                "cd ${workspaceFolder}/.vscode && python docker_push.py"
             ],
             "problemMatcher": []
         },
