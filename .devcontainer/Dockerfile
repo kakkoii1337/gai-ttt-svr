@@ -1,4 +1,4 @@
-FROM kakkoii1337/torch2.2.0-cuda12.1-ubuntu22.04-base:latest as build
+FROM kakkoii1337/torch2.2.0-cuda12.1-ubuntu22.04-base:1.0.8
 ENV DEBIAN_FRONTEND=noninteractive PIP_PREFER_BINARY=1
 
 # Install system deps
@@ -32,7 +32,7 @@ RUN pip install https://github.com/turboderp/exllamav2/releases/download/v0.1.8/
     
 # Configure Gai
 ENV MODEL_PATH="/root/.gai/models"
-ENV CATEGORY="itt"
+ENV CATEGORY="ttt"
 RUN echo '{"app_dir":"/root/.gai"}' > /root/.gairc
 VOLUME /root/.gai
 
