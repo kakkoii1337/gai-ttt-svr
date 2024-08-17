@@ -21,6 +21,6 @@
 		}
 	},
 	"forwardPorts": [],
-	"postCreateCommand": "poetry install",
+	"postCreateCommand": "~/.local/bin/poetry install",
 	"remoteUser": "root"
 }
