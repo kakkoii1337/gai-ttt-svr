@@ -105,6 +105,7 @@ def docker_stop(component):
 @cli.command()
 @click.argument('component')
 def docker_idle(component):
+    _docker_stop(component)
     _docker_idle(component)
 
 ### DOCKER_SSH

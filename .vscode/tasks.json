@@ -41,5 +41,15 @@
             ],
             "problemMatcher": []
         },
+        {
+            "label": "Docker: idle",
+            "type": "shell",
+            "command": "/bin/bash",
+            "args": [
+                "-c",
+                "python ${workspaceFolder}/.vscode/devops_cli.py docker-idle gai-ttt"
+            ],
+            "problemMatcher": []
+        },
     ]
 }

@@ -26,7 +26,7 @@ RUN pip install https://github.com/turboderp/exllamav2/releases/download/v0.1.8/
 # Step 3: Copy Source Code
 WORKDIR /app
 COPY src/gai/ttt src/gai/ttt
-COPY pyproject.toml.docker ./pyproject.toml
+COPY pyproject.toml ./pyproject.toml
 RUN poetry install
 
 # Step 5: Startup
