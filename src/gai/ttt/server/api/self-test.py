@@ -1,22 +1,20 @@
 # zero dependency self-test script
 import os,sys,subprocess
 import importlib
+from gai.lib.common.color import yellow,green,red
 verbose=False
 
-def yellow(text):
-    print(f"\033[33m{text}\033[0m")
-def green(text):
-    print(f"\033[32m{text}\033[0m")
-def red(text):
-    print(f"\033[31m{text}\033[0m")
-
 def check_package_installed(package_name, err_message=None):
-    result = subprocess.run(['pip', 'list'], capture_output=True, text=True)
-    is_exists=package_name in result.stdout    
-    if not is_exists:
-        red(err_message)
-        exit(1)
-    if verbose:
+    # Try to find the package
+    package_spec = importlib.util.find_spec(package_name)
+   
+    if package_spec is None:
+        # Package is not found, handle error
+        if err_message:
+            red(err_message)  # Print error message if provided
+        sys.exit(1)
+    else:
+        # Package is found, print confirmation message
         green(f"{package_name} is installed")
 
 def check_package_directory(package_dir, err_message=None):

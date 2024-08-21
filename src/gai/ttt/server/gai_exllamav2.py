@@ -217,14 +217,19 @@ class GaiExLlamav2:
             result=self.generate(verbose=self.__verbose)
             try:
                 if (self.is_using_tools(self.job_state)):
+                    # This will throw error if its not even JSON
                     jsoned={
                         "type":"function",
                         "function":json.loads(result["full_completion"])
                     }
+                    # This will throw error if its JSON but schema is invalid
                     validate(instance=jsoned, schema=self.validation_schema)
 
                 if (self.is_using_json_schema(self.job_state)):
+                    # This will throw error if its not even JSON
                     jsoned=json.loads(result["full_completion"])
+
+                    # This will throw error if its JSON but schema is invalid
                     validate(instance=jsoned, schema=self.validation_schema)
 
                 # We are safe once we reach here since its either text or we have passed validations
@@ -235,7 +240,8 @@ class GaiExLlamav2:
                 self.load_job()
             except Exception as e:
                 logger.error(f"GaiExLlamav2.generate_with_retries: error={e}")
-                raise e
+                retries-=1
+                self.load_job()
         raise Exception("GaiExLlamav2.generate_with_retries: Validation of schema is required and failed after max retries.")
 
     def _streaming(self):

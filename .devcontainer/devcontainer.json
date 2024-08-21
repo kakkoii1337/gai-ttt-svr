@@ -1,9 +1,12 @@
 {
+	"name": "gai-ttt-svr",
 	"build": {
 		"dockerfile": "Dockerfile"
 	},
 	"runArgs": [
-		"--gpus=all"
+		"--gpus=all",
+		// Add a custom network that shares the same address space as WSL instance
+		"--network=gai-sandbox"
 	],
 	"mounts": [
 		"source=${localEnv:HOME}/.gai,target=/root/.gai,type=bind,consistency=cached",
@@ -20,7 +23,12 @@
 			]
 		}
 	},
-	"forwardPorts": [],
+	"forwardPorts": [
+		12031
+	],
+	"appPort": [
+		"12031:12031"
+	],
 	"postCreateCommand": "~/.local/bin/poetry install",
 	"remoteUser": "root"
 }
