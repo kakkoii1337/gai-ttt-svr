@@ -1,25 +1,18 @@
+[build-system]
+requires = [ "poetry-core>=1.8.3",]
+build-backend = "poetry.core.masonry.api"
+
 [tool.poetry]
 name = "gai-ttt-svr"
-version = "0.200"
+version = "0.202"
 description = "Refer to https://gai-labs.github.io/gai for more information"
-authors = ["kakkoii1337 <kakkoii1337@gmail.com>"]
+authors = [ "kakkoii1337 <kakkoii1337@gmail.com>",]
 license = "MIT"
-classifiers = [
-    "Programming Language :: Python :: 3.10",
-    "Development Status :: 3 - Alpha",
-    "License :: OSI Approved :: MIT License",
-    "Intended Audience :: Science/Research",
-    "Intended Audience :: Developers",
-    "Operating System :: OS Independent",
-    "Topic :: Software Development",
-    "Topic :: Software Development :: Libraries :: Python Modules",
-    "Topic :: Scientific/Engineering :: Artificial Intelligence"
-]
-packages = [
-    { include = "gai/ttt/server", from="./src"}
-]
-include = [
-]
+classifiers = [ "Programming Language :: Python :: 3.10", "Development Status :: 3 - Alpha", "License :: OSI Approved :: MIT License", "Intended Audience :: Science/Research", "Intended Audience :: Developers", "Operating System :: OS Independent", "Topic :: Software Development", "Topic :: Software Development :: Libraries :: Python Modules", "Topic :: Scientific/Engineering :: Artificial Intelligence",]
+include = []
+[[tool.poetry.packages]]
+include = "gai/ttt/server"
+from = "./src"
 
 [tool.poetry.dependencies]
 python = "^3.10, <3.12"
@@ -30,7 +23,7 @@ debugpy = "1.8.5"
 fastapi = "^0.112.0"
 httpx = "^0.27.0"
 jsonschema = "4.22.0"
-lm-format-enforcer = "0.10.2"
+lm-format-enforcer = "^0.10.6"
 markdownify = "^0.13.1"
 numpy = "^1.26.4, <2.0.0"
 openai = "^1.40.0, <2.0.0"
@@ -57,10 +50,3 @@ ipykernel = "^6.29.5"
 toml = "^0.10.2"
 flake8 = "^7.1.1"
 pytest-ordering = "^0.6"
-
-[build-system]
-requires = ["poetry-core>=1.8.3"]
-build-backend = "poetry.core.masonry.api"
-
-
-

@@ -249,9 +249,6 @@ class GaiExLlamav2:
         result = None
         completed = ""
 
-        if self.is_validation_required(self.job_state):
-            raise Exception("GaiExLlamav2._streaming: Validation of schema is required and not supported in streaming mode.")
-
         while not eos:
 
             # Run one iteration of the generator. Returns a list of results
@@ -351,7 +348,9 @@ class GaiExLlamav2:
             "decode_special_tokens": self.gai_config["decode_special_tokens"]
         }
         if self.is_validation_required(self.job_state):
-            self.job_state["temperature"]=0        
+            if self.job_state["stream"]:
+                raise Exception("GaiExLlamav2._streaming: Validation of schema is required and not supported in streaming mode.")
+            self.job_state["temperature"]=0
 
     def create(self, 
         messages:list,
