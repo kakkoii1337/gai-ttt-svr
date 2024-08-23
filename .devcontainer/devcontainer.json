@@ -10,7 +10,8 @@
 	],
 	"mounts": [
 		"source=${localEnv:HOME}/.gai,target=/root/.gai,type=bind,consistency=cached",
-		"source=${localEnv:HOME}/.cache,target=/root/.cache,type=bind,consistency=cached"
+		"source=${localEnv:HOME}/.cache,target=/root/.cache,type=bind,consistency=cached",
+		"source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind"
 	],
 	"customizations": {
 		"vscode": {

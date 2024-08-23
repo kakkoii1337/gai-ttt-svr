@@ -1,13 +1,35 @@
 FROM kakkoii1337/torch2.2.0-cuda12.1-ubuntu22.04-base:1.0.8
 ENV DEBIAN_FRONTEND=noninteractive PIP_PREFER_BINARY=1
 
+# devcontainer Options
+ARG INSTALL_ZSH="true"
+ARG UPGRADE_PACKAGES="false"
+ARG USERNAME=vscode
+ARG USER_UID=1000
+ARG USER_GID=$USER_UID
+COPY library-scripts/*.sh library-scripts/*.env /tmp/library-scripts/
+
 # Install system deps
-RUN --mount=type=cache,target=/var/cache/apt \
-    --mount=type=cache,target=/var/lib/apt/lists \
-    apt update && apt upgrade -y && apt install -y --no-install-recommends \
+RUN apt update && apt upgrade -y \
+    && apt install -y --no-install-recommends \
         sudo \
         git \
-        curl
+        curl \
+        ca-certificates \
+        gnupg \
+        lsb-release \
+        wget \
+    # Install common packages, non-root user
+    && bash /tmp/library-scripts/common-debian.sh "${INSTALL_ZSH}" "${USERNAME}" "${USER_UID}" "${USER_GID}" "${UPGRADE_PACKAGES}" "true" "true" \
+    && apt-get autoremove -y && apt-get clean -y && rm -rf /var/lib/apt/lists/*
+
+# Setup default python tools in a venv via pipx to avoid conflicts
+ENV PIPX_HOME=/usr/local/py-utils \
+    PIPX_BIN_DIR=/usr/local/py-utils/bin
+ENV PATH=${PATH}:${PIPX_BIN_DIR}
+RUN ln -s /opt/conda/bin/python3 /usr/local/bin/python3
+RUN bash /tmp/library-scripts/python-debian.sh "none" "/usr/local" "${PIPX_HOME}" "${USERNAME}" \ 
+    && apt-get clean -y && rm -rf /var/lib/apt/lists/*
 
 # Install python deps
 RUN pip install --upgrade \

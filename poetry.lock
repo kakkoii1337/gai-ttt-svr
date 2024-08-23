@@ -674,13 +674,13 @@ tqdm = ["tqdm"]
 
 [[package]]
 name = "gai-sdk"
-version = "0.247"
+version = "0.251"
 description = "Refer to https://gai-labs.github.io/gai for more information"
 optional = false
 python-versions = "<3.12,>=3.10"
 files = [
-    {file = "gai_sdk-0.247-py3-none-any.whl", hash = "sha256:cd202f9403a69a71e5b19f145839fb3d7178b3a9abee7ab4b652a535f76cb489"},
-    {file = "gai_sdk-0.247.tar.gz", hash = "sha256:fe97dc9d1d6cf166e9ae00d278e56f4b99b0fae01f1590fca08f7c226ba9a6af"},
+    {file = "gai_sdk-0.251-py3-none-any.whl", hash = "sha256:033d96f67d58b9a8f79d8108613e20a1cbc6b0cd4362039a7f9b342f37d3cae8"},
+    {file = "gai_sdk-0.251.tar.gz", hash = "sha256:2a7e138e92437ce51caa9215e2833a2dd0482f5e8a554fa3d6db0772bf8b00b0"},
 ]
 
 [package.dependencies]
@@ -3479,4 +3479,4 @@ test = ["big-O", "importlib-resources", "jaraco.functools", "jaraco.itertools", 
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10, <3.12"
-content-hash = "88789b8796e992295862dd220466273072c14f3d6c0ff664035875eb5c37f1b6"
+content-hash = "ddf3d047185d8579d9075facdd86940a0b3a568961a430dc07590f71e3f83a0e"
