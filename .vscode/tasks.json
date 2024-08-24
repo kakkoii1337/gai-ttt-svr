@@ -32,12 +32,12 @@
             "problemMatcher": []
         },
         {
-            "label": "Docker: run",
+            "label": "Docker: exec",
             "type": "shell",
             "command": "/bin/bash",
             "args": [
                 "-c",
-                "python ${workspaceFolder}/.vscode/devops_cli.py docker-run gai-ttt"
+                "cd ${workspaceFolder}/.vscode && python docker_exec.py"
             ],
             "problemMatcher": []
         },

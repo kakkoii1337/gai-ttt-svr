@@ -332,7 +332,7 @@ class GaiExLlamav2:
         logger.info("gai_exllamav2.create: Initializing job_state.")
         if self.tokenizer.eos_token_id not in self.gai_config["stop_conditions"]:
             self.gai_config["stop_conditions"].append(self.tokenizer.eos_token_id)
-        for stop_condition in stop_conditions:
+        for stop_condition in stop_conditions or []:
             if stop_condition not in self.gai_config["stop_conditions"]:
                 self.gai_config["stop_conditions"].append(stop_condition)
 

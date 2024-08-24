@@ -22,7 +22,6 @@ def cli():
     pass
 
 # VERSION ------------------------------------------------------------------------------------------------------------------------------------------------
-
 @cli.command()
 @click.argument('component')
 def get_version(component):
@@ -69,31 +68,6 @@ def docker_push(component):
     version = _get_version(pyproject_path=pyproject_path)
     _docker_push(component,version)
     print("Docker image pushed successfully.")
-
-### DOCKER_RUN
-def _docker_run_ttt(component):
-    if component != "gai-ttt":
-        print("Wrong component found.")
-        return
-    cmd=f"""docker run -d \
-        -e DEFAULT_GENERATOR="ttt-exllamav2-mistral7b" \
-        -e SWAGGER_URL="/doc" \
-        -e SELF_TEST="true" \
-        --gpus all \
-        -v ~/.gai:/app/.gai \
-        -p 12031:12031 \
-        --name gai-ttt \
-        --network gai-sandbox \
-        kakkoii1337/gai-ttt:latest"""
-    _cmd(cmd)
-
-@cli.command()
-@click.argument('component')
-def docker_run(component):
-    console.print(f"docker run [italic yellow]{component}[/]")
-    _docker_stop(component)
-    _docker_run_ttt(component)
-    print(f"Docker container {component} started.")
 
 ### DOCKER_STOP
 @cli.command()
