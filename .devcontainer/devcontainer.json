@@ -30,6 +30,6 @@
 	"appPort": [
 		"12031:12031"
 	],
-	"postCreateCommand": "~/.local/bin/poetry install",
+	"postCreateCommand": "pip install -e .",
 	"remoteUser": "root"
 }
