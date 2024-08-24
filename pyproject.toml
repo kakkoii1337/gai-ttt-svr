@@ -4,7 +4,7 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.poetry]
 name = "gai-ttt-svr"
-version = "0.204"
+version = "0.205"
 description = "Refer to https://gai-labs.github.io/gai for more information"
 authors = [ "kakkoii1337 <kakkoii1337@gmail.com>",]
 license = "MIT"
@@ -40,6 +40,7 @@ torchvision = "0.17.0"
 transformers = "^4.44.0"
 uvicorn = "^0.23.2"
 gai-sdk = "^0.251"
+toml = "^0.10.2"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.3.2"
