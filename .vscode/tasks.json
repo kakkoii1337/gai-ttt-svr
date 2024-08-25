@@ -17,7 +17,7 @@
             "command": "/bin/bash",
             "args": [
                 "-c",
-                "cd ${workspaceFolder}/.vscode && python docker_build.py"
+                "gai docker build ${workspaceFolder}/pyproject.toml gai-ttt"
             ],
             "problemMatcher": []
         },
@@ -27,17 +27,7 @@
             "command": "/bin/bash",
             "args": [
                 "-c",
-                "cd ${workspaceFolder}/.vscode && python docker_push.py"
-            ],
-            "problemMatcher": []
-        },
-        {
-            "label": "Docker: exec",
-            "type": "shell",
-            "command": "/bin/bash",
-            "args": [
-                "-c",
-                "cd ${workspaceFolder}/.vscode && python docker_exec.py"
+                "gai docker push ${workspaceFolder}/pyproject.toml gai-ttt"
             ],
             "problemMatcher": []
         },
@@ -47,7 +37,17 @@
             "command": "/bin/bash",
             "args": [
                 "-c",
-                "python ${workspaceFolder}/.vscode/devops_cli.py docker-stop gai-ttt"
+                "gai docker stop gai-ttt"
+            ],
+            "problemMatcher": []
+        },
+        {
+            "label": "Docker: run",
+            "type": "shell",
+            "command": "/bin/bash",
+            "args": [
+                "-c",
+                "cd ${workspaceFolder}/.vscode && python docker_run.py"
             ],
             "problemMatcher": []
         },
@@ -57,7 +57,7 @@
             "command": "/bin/bash",
             "args": [
                 "-c",
-                "python ${workspaceFolder}/.vscode/devops_cli.py docker-idle gai-ttt"
+                "cd ${workspaceFolder}/.vscode && python docker_idle.py"
             ],
             "problemMatcher": []
         },
