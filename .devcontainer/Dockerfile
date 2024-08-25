@@ -1,5 +1,8 @@
-FROM kakkoii1337/torch2.2.0-cuda12.1-ubuntu22.04-base:1.0.8
+FROM pytorch/pytorch:2.2.0-cuda12.1-cudnn8-runtime AS base
 ENV DEBIAN_FRONTEND=noninteractive PIP_PREFER_BINARY=1
+ENV TORCH_CUDA_ARCH_LIST="7.5 8.0 8.6+PTX"
+ARG CATEGORY=ttt
+ARG DEVICE=cuda
 
 # devcontainer Options
 ARG INSTALL_ZSH="true"
