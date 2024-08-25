@@ -7,7 +7,7 @@ ARG DEVICE=cuda
 ENV PATH="/usr/local/cuda-12.1/bin:$PATH"
 ENV LD_LIBRARY_PATH="/usr/local/cuda-12.1/lib64:/usr/lib/wsl/lib:$LD_LIBRARY_PATH"
 
-#Step 1: Install deps
+#Step 1: Install deps and poetry
 RUN --mount=type=cache,target=/var/lib/apt/lists \
     --mount=type=cache,target=/var/cache,sharing=locked \
     apt-get update \
@@ -40,18 +40,18 @@ RUN poetry export --output=requirements.txt
 RUN --mount=type=cache,target=/root/.cache/pip \
     pip install  --disable-pip-version-check --no-deps --requirement=/app/requirements.txt --only-binary :all:
 
+# Step 5: Install project
 RUN --mount=type=cache,target=/root/.cache/pypoetry \
-    poetry config virtualenvs.create false && \
     poetry install --no-interaction --no-ansi -vv
 
-# Step 5: Startup
+# Step 6: Startup
 RUN echo '{"app_dir":"/app/.gai"}' > /root/.gairc
 VOLUME /app/.gai
 ENV MODEL_PATH="/app/.gai/models"
 ENV CATEGORY=${CATEGORY}
 WORKDIR /app/src/gai/ttt/server/api
 
-# Create get_version.sh script
+# Step 7: Create get_version.sh script
 RUN echo '#!/bin/bash' > /app/src/gai/ttt/server/api/get_version.sh && \
     echo "python -c \"import toml; print(toml.load('/app/pyproject.toml')['tool']['poetry']['version'])\"" >> /app/src/gai/ttt/server/api/get_version.sh && \
     chmod +x /app/src/gai/ttt/server/api/get_version.sh

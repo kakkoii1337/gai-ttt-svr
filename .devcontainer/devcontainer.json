@@ -1,7 +1,10 @@
 {
 	"name": "gai-ttt-svr",
 	"build": {
-		"dockerfile": "Dockerfile"
+		"dockerfile": "Dockerfile",
+		"args": {
+			"USERNAME": "roylai"
+		}
 	},
 	"runArgs": [
 		"--gpus=all",
@@ -30,6 +33,6 @@
 	"appPort": [
 		"12031:12031"
 	],
-	"postCreateCommand": "pip install -e .",
-	"remoteUser": "root"
+	//"postCreateCommand": "poetry install",
+	"remoteUser": "kakkoii1337"
 }

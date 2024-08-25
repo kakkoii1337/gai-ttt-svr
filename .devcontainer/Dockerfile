@@ -1,4 +1,6 @@
-FROM pytorch/pytorch:2.2.0-cuda12.1-cudnn8-runtime AS base
+# syntax=docker/dockerfile:1.2
+FROM python:3.10-bullseye
+
 ENV DEBIAN_FRONTEND=noninteractive PIP_PREFER_BINARY=1
 ENV TORCH_CUDA_ARCH_LIST="7.5 8.0 8.6+PTX"
 ARG CATEGORY=ttt
@@ -7,14 +9,17 @@ ARG DEVICE=cuda
 # devcontainer Options
 ARG INSTALL_ZSH="true"
 ARG UPGRADE_PACKAGES="false"
-ARG USERNAME=vscode
+ARG USERNAME=kakkoii1337
 ARG USER_UID=1000
 ARG USER_GID=$USER_UID
 COPY library-scripts/*.sh library-scripts/*.env /tmp/library-scripts/
 
-# Install system deps
-RUN apt update && apt upgrade -y \
-    && apt install -y --no-install-recommends \
+# Install system deps and poetry
+RUN --mount=type=cache,target=/var/lib/apt/lists \
+    --mount=type=cache,target=/var/cache,sharing=locked \
+    apt-get update  \
+    && apt-get upgrade --assume-yes \
+    && apt-get install --assume-yes --no-install-recommends \
         sudo \
         git \
         curl \
@@ -30,9 +35,11 @@ RUN apt update && apt upgrade -y \
 ENV PIPX_HOME=/usr/local/py-utils \
     PIPX_BIN_DIR=/usr/local/py-utils/bin
 ENV PATH=${PATH}:${PIPX_BIN_DIR}
-RUN ln -s /opt/conda/bin/python3 /usr/local/bin/python3
+RUN if [ ! -e /usr/local/bin/python3 ]; then ln -s /opt/conda/bin/python3 /usr/local/bin/python3; fi
 RUN bash /tmp/library-scripts/python-debian.sh "none" "/usr/local" "${PIPX_HOME}" "${USERNAME}" \ 
     && apt-get clean -y && rm -rf /var/lib/apt/lists/*
+
+USER kakkoii1337
 
 # Install python deps
 RUN pip install --upgrade \
@@ -48,12 +55,17 @@ RUN pip install --upgrade \
     nest-asyncio
 
 # Install poetry
-RUN curl -sSL https://install.python-poetry.org | python3 -
-RUN ~/.local/bin/poetry config virtualenvs.create false
-ENV PATH="~/.local/bin:${PATH}"
+ENV PATH="/root/.local/bin:${PATH}"
+RUN curl -sSL https://install.python-poetry.org | python3 - \
+    && poetry config virtualenvs.create false \
+    && apt remove -y curl
 
-## Install exllamav2
-RUN pip install https://github.com/turboderp/exllamav2/releases/download/v0.1.8/exllamav2-0.1.8+cu121.torch2.2.2-cp310-cp310-linux_x86_64.whl
+# Step 2: Install exllamav2
+RUN --mount=type=cache,target=/root/.cache/pip \
+    if [ ! -f /root/.cache/pip/exllamav2-0.1.8+cu121.torch2.2.2-cp310-cp310-linux_x86_64.whl ]; then \
+        wget https://github.com/turboderp/exllamav2/releases/download/v0.1.8/exllamav2-0.1.8+cu121.torch2.2.2-cp310-cp310-linux_x86_64.whl -P /root/.cache/pip; \
+    fi \
+    && pip install /root/.cache/pip/exllamav2-0.1.8+cu121.torch2.2.2-cp310-cp310-linux_x86_64.whl
     
 # Configure Gai
 ENV MODEL_PATH="/root/.gai/models"
