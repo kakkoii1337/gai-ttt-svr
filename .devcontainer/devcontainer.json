@@ -3,7 +3,7 @@
 	"build": {
 		"dockerfile": "Dockerfile",
 		"args": {
-			"USERNAME": "roylai"
+			"USERNAME": "kakkoii1337"
 		}
 	},
 	"runArgs": [
@@ -12,8 +12,8 @@
 		"--network=gai-sandbox"
 	],
 	"mounts": [
-		"source=${localEnv:HOME}/.gai,target=/root/.gai,type=bind,consistency=cached",
-		"source=${localEnv:HOME}/.cache,target=/root/.cache,type=bind,consistency=cached",
+		"source=${localEnv:HOME}/.gai,target=/kakkoii1337/.gai,type=bind,consistency=cached",
+		"source=${localEnv:HOME}/.cache,target=/kakkoii1337/.cache,type=bind,consistency=cached",
 		"source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind"
 	],
 	"customizations": {
@@ -33,6 +33,6 @@
 	"appPort": [
 		"12031:12031"
 	],
-	//"postCreateCommand": "poetry install",
-	"remoteUser": "kakkoii1337"
+	"remoteUser": "kakkoii1337",
+	"postCreateCommand": "poetry install",
 }

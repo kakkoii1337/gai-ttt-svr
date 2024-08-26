@@ -39,7 +39,8 @@ RUN if [ ! -e /usr/local/bin/python3 ]; then ln -s /opt/conda/bin/python3 /usr/l
 RUN bash /tmp/library-scripts/python-debian.sh "none" "/usr/local" "${PIPX_HOME}" "${USERNAME}" \ 
     && apt-get clean -y && rm -rf /var/lib/apt/lists/*
 
-USER kakkoii1337
+RUN echo Switching to non-root user $USERNAME
+USER $USERNAME
 
 # Install python deps
 RUN pip install --upgrade \
@@ -55,22 +56,22 @@ RUN pip install --upgrade \
     nest-asyncio
 
 # Install poetry
-ENV PATH="/root/.local/bin:${PATH}"
+ENV HOME_PATH="/home/$USERNAME"
+ENV PATH="${HOME_PATH}/.local/bin:${PATH}"
 RUN curl -sSL https://install.python-poetry.org | python3 - \
-    && poetry config virtualenvs.create false \
-    && apt remove -y curl
+    # enable virtual environment to allow non-root user to install packages in container
+    && poetry config virtualenvs.create true \
+    && poetry config virtualenvs.in-project true
 
 # Step 2: Install exllamav2
-RUN --mount=type=cache,target=/root/.cache/pip \
-    if [ ! -f /root/.cache/pip/exllamav2-0.1.8+cu121.torch2.2.2-cp310-cp310-linux_x86_64.whl ]; then \
-        wget https://github.com/turboderp/exllamav2/releases/download/v0.1.8/exllamav2-0.1.8+cu121.torch2.2.2-cp310-cp310-linux_x86_64.whl -P /root/.cache/pip; \
+RUN --mount=type=cache,target=${HOME_PATH}/.cache/pip \
+    if [ ! -f ${HOME_PATH}/.cache/pip/exllamav2-0.1.8+cu121.torch2.2.2-cp310-cp310-linux_x86_64.whl ]; then \
+        wget https://github.com/turboderp/exllamav2/releases/download/v0.1.8/exllamav2-0.1.8+cu121.torch2.2.2-cp310-cp310-linux_x86_64.whl -P ${HOME_PATH}/.cache/pip; \
     fi \
-    && pip install /root/.cache/pip/exllamav2-0.1.8+cu121.torch2.2.2-cp310-cp310-linux_x86_64.whl
+    && pip install ${HOME_PATH}/.cache/pip/exllamav2-0.1.8+cu121.torch2.2.2-cp310-cp310-linux_x86_64.whl
     
 # Configure Gai
-ENV MODEL_PATH="/root/.gai/models"
+ENV MODEL_PATH="${HOME_PATH}/.gai/models"
 ENV CATEGORY="ttt"
-RUN echo '{"app_dir":"/root/.gai"}' > /root/.gairc
-VOLUME /root/.gai
-
-
+RUN echo "{/"app_dir/":/"/${HOME_PATH}/.gai/"}" > ${HOME_PATH}/.gairc
+VOLUME ${HOME_PATH}/.gai
