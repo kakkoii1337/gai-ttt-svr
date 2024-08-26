@@ -68,10 +68,11 @@ RUN --mount=type=cache,target=${HOME_PATH}/.cache/pip \
     if [ ! -f ${HOME_PATH}/.cache/pip/exllamav2-0.1.8+cu121.torch2.2.2-cp310-cp310-linux_x86_64.whl ]; then \
         wget https://github.com/turboderp/exllamav2/releases/download/v0.1.8/exllamav2-0.1.8+cu121.torch2.2.2-cp310-cp310-linux_x86_64.whl -P ${HOME_PATH}/.cache/pip; \
     fi \
-    && pip install ${HOME_PATH}/.cache/pip/exllamav2-0.1.8+cu121.torch2.2.2-cp310-cp310-linux_x86_64.whl
+    # Run in poetry shell to install exllamav2 into venv
+    && poetry run pip install ${HOME_PATH}/.cache/pip/exllamav2-0.1.8+cu121.torch2.2.2-cp310-cp310-linux_x86_64.whl
     
 # Configure Gai
 ENV MODEL_PATH="${HOME_PATH}/.gai/models"
 ENV CATEGORY="ttt"
-RUN echo "{/"app_dir/":/"/${HOME_PATH}/.gai/"}" > ${HOME_PATH}/.gairc
+RUN echo "{\"app_dir\":\"${HOME_PATH}/.gai\"}" > ${HOME_PATH}/.gairc && mkdir -p ${MODEL_PATH}/.gai
 VOLUME ${HOME_PATH}/.gai
