@@ -35,3 +35,4 @@ build
 **/*.jwk
 
 gai-ttt-svr
+.venv
