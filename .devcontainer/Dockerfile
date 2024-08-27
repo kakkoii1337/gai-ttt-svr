@@ -61,13 +61,13 @@ RUN curl -sSL https://install.python-poetry.org | python3 -
 ENV PATH="${HOME_PATH}/.local/bin:${PATH}"
 
 # Create and activate virtual environment
-RUN python -m venv ${HOME_PATH}/venv \
+RUN python -m venv ${HOME_PATH}/.venv \
     # disable virtual env management by poetry
     && poetry config virtualenvs.create false
 
 # enable source
 SHELL ["/bin/bash","-c"]
-ENV PATH="${HOME_PATH}/venv/bin/python:${PATH}"
+ENV PATH="${HOME_PATH}/.venv/bin/python:${PATH}"
 
 # Set "CACHEBUST" from devcontainer.json to rebuild from here if needed
 ARG CACHEBUST=1
@@ -76,7 +76,7 @@ ENV CACHEBUST=${CACHEBUST}
 #Install dependencies(773s)
 ENV CACHE_PATH=${HOME_PATH}/.cache/pypoetry
 RUN --mount=type=cache,target=${CACHE_PATH} \
-    source ${HOME_PATH}/venv/bin/activate \
+    source ${HOME_PATH}/.venv/bin/activate \
     && pip install "torch==2.2.0" \
     && pip install "numpy==1.26.4" \
     && if [ ! -f "${HOME}/.cache/pypoetry/exllamav2-0.1.8+cu121.torch2.2.2-cp310-cp310-linux_x86_64.whl" ]; then \

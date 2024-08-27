@@ -21,18 +21,18 @@ RUN curl -sSL https://install.python-poetry.org | python3 -
 ENV PATH="${HOME_PATH}/.local/bin:${PATH}"
 
 # Create and activate virtual environment
-RUN python -m venv ${HOME_PATH}/venv \
+RUN python -m venv ${HOME_PATH}/.venv \
     # disable virtual env management by poetry
     && poetry config virtualenvs.create false
 
 # enable source
 SHELL ["/bin/bash","-c"]
-ENV PATH="${HOME_PATH}/venv/bin/python:${PATH}"
+ENV PATH="${HOME_PATH}/.venv/bin/python:${PATH}"
 
 #Install dependencies(773s)
 ENV CACHE_PATH=${HOME_PATH}/.cache/pypoetry
 RUN --mount=type=cache,target=${CACHE_PATH} \
-    source ${HOME_PATH}/venv/bin/activate \
+    source ${HOME_PATH}/.venv/bin/activate \
     && pip install "torch==2.2.0" \
     && pip install "numpy==1.26.4" \
     && if [ ! -f "${HOME}/.cache/pypoetry/exllamav2-0.1.8+cu121.torch2.2.2-cp310-cp310-linux_x86_64.whl" ]; then \
@@ -53,7 +53,7 @@ COPY pyproject.toml poetry.lock ./
 
 # Step 5: Install project
 RUN --mount=type=cache,target=${CACHE_PATH} \
-    source ${HOME_PATH}/venv/bin/activate \
+    source ${HOME_PATH}/.venv/bin/activate \
     poetry install --no-interaction --no-ansi -vv
 
 # # Step 6: Startup
@@ -64,11 +64,11 @@ RUN --mount=type=cache,target=${CACHE_PATH} \
 # WORKDIR /app/src/gai/ttt/server/api
 
 # # Step 7: Create get_version.sh script
-# # RUN source ${HOME_PATH}/venv/bin/activate && \
+# # RUN source ${HOME_PATH}/.venv/bin/activate && \
 # #     echo '#!/bin/bash' > /app/src/gai/ttt/server/api/get_version.sh && \
 # #     echo "python -c \"import toml; print(toml.load('/app/pyproject.toml')['tool']['poetry']['version'])\"" >> /app/src/gai/ttt/server/api/get_version.sh && \
 # #     chmod +x /app/src/gai/ttt/server/api/get_version.sh
-# # CMD ["bash", "-c", "./get_version.sh; echo 'Starting main.py...'; source /root/venv/bin/activate && python main.py"]
+# # CMD ["bash", "-c", "./get_version.sh; echo 'Starting main.py...'; source /root/.venv/bin/activate && python main.py"]
 
 # COPY startup.sh /app/src/gai/ttt/server/api/
 # CMD ["bash","startup.sh"]
