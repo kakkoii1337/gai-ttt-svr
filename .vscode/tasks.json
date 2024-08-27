@@ -17,7 +17,7 @@
             "command": "/bin/bash",
             "args": [
                 "-c",
-                "gai docker build ${workspaceFolder}/pyproject.toml gai-ttt"
+                "source ${workspaceFolder}/.venv/bin/activate && gai docker build ${workspaceFolder}/pyproject.toml gai-ttt"
             ],
             "problemMatcher": []
         },
@@ -47,7 +47,7 @@
             "command": "/bin/bash",
             "args": [
                 "-c",
-                "cd ${workspaceFolder}/.vscode && python docker_run.py"
+                "source ${workspaceFolder}/.venv/bin/activate && python ${workspaceFolder}/.vscode/docker_run.py"
             ],
             "problemMatcher": []
         },
@@ -57,7 +57,7 @@
             "command": "/bin/bash",
             "args": [
                 "-c",
-                "cd ${workspaceFolder}/.vscode && python docker_idle.py"
+                "source ${workspaceFolder}/.venv/bin/activate && python ${workspaceFolder}/.vscode/docker_idle.py"
             ],
             "problemMatcher": []
         },

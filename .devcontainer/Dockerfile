@@ -12,7 +12,7 @@ ARG UPGRADE_PACKAGES="false"
 ARG USERNAME=kakkoii1337
 ARG USER_UID=1000
 ARG USER_GID=$USER_UID
-COPY library-scripts/*.sh library-scripts/*.env /tmp/library-scripts/
+COPY .devcontainer/library-scripts/*.sh .devcontainer/library-scripts/*.env /tmp/library-scripts/
 
 # Install system deps and poetry
 RUN --mount=type=cache,target=/var/lib/apt/lists \
@@ -56,23 +56,40 @@ RUN pip install --upgrade \
     nest-asyncio
 
 # Install poetry
-ENV HOME_PATH="/home/$USERNAME"
+ARG HOME_PATH="/home/$USERNAME"
+RUN curl -sSL https://install.python-poetry.org | python3 - 
 ENV PATH="${HOME_PATH}/.local/bin:${PATH}"
-RUN curl -sSL https://install.python-poetry.org | python3 - \
-    # enable virtual environment to allow non-root user to install packages in container
-    && poetry config virtualenvs.create true \
-    && poetry config virtualenvs.in-project true
 
-# Step 2: Install exllamav2
-RUN --mount=type=cache,target=${HOME_PATH}/.cache/pip \
-    if [ ! -f ${HOME_PATH}/.cache/pip/exllamav2-0.1.8+cu121.torch2.2.2-cp310-cp310-linux_x86_64.whl ]; then \
-        wget https://github.com/turboderp/exllamav2/releases/download/v0.1.8/exllamav2-0.1.8+cu121.torch2.2.2-cp310-cp310-linux_x86_64.whl -P ${HOME_PATH}/.cache/pip; \
-    fi \
-    # Run in poetry shell to install exllamav2 into venv
-    && poetry run pip install ${HOME_PATH}/.cache/pip/exllamav2-0.1.8+cu121.torch2.2.2-cp310-cp310-linux_x86_64.whl
-    
-# Configure Gai
+# Create and activate virtual environment
+RUN python -m venv ${HOME_PATH}/venv \
+    # disable virtual env management by poetry
+    && poetry config virtualenvs.create false
+
+# enable source
+SHELL ["/bin/bash","-c"]
+ENV PATH="${HOME_PATH}/venv/bin/python:${PATH}"
+
+# Set "CACHEBUST" from devcontainer.json to rebuild from here if needed
+ARG CACHEBUST=1
+ENV CACHEBUST=${CACHEBUST}
+
+#Install dependencies(773s)
+ENV CACHE_PATH=${HOME_PATH}/.cache/pypoetry
+RUN --mount=type=cache,target=${CACHE_PATH} \
+    source ${HOME_PATH}/venv/bin/activate \
+    && pip install "torch==2.2.0" \
+    && pip install "numpy==1.26.4" \
+    && if [ ! -f "${HOME}/.cache/pypoetry/exllamav2-0.1.8+cu121.torch2.2.2-cp310-cp310-linux_x86_64.whl" ]; then \
+         wget "https://github.com/turboderp/exllamav2/releases/download/v0.1.8/exllamav2-0.1.8+cu121.torch2.2.2-cp310-cp310-linux_x86_64.whl" -P ${HOME}/.cache/pypoetry; \
+        fi \
+        && pip install "${HOME}/.cache/pypoetry/exllamav2-0.1.8+cu121.torch2.2.2-cp310-cp310-linux_x86_64.whl"
+
+# Create .gairc
+RUN echo "{\"app_dir\":\"${HOME_PATH}/.gai\"}" > ${HOME_PATH}/.gairc && mkdir -p ${HOME_PATH}/.gai
+
+# Prepare ~/.gai
 ENV MODEL_PATH="${HOME_PATH}/.gai/models"
 ENV CATEGORY="ttt"
-RUN echo "{\"app_dir\":\"${HOME_PATH}/.gai\"}" > ${HOME_PATH}/.gairc && mkdir -p ${MODEL_PATH}/.gai
 VOLUME ${HOME_PATH}/.gai
+
+COPY .devcontainer/postCreateCommand.sh ${HOME_PATH}/postCreateCommand.sh

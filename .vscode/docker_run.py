@@ -3,23 +3,6 @@ from gai.scripts._scripts_utils import _get_version
 
 base_name="gai-ttt"
 
-# ## Update version in pyproject.toml
-# def __update_version(pyproject_path):
-#     with open(pyproject_path, "r+") as f:
-#         data = toml.load(f)
-
-#         # Extract and update the version number
-#         version_parts = data["tool"]["poetry"]["version"].split(".")
-#         version_parts[-1] = str(int(version_parts[-1]) + 1)  # Increment the patch version
-#         data["tool"]["poetry"]["version"] = ".".join(version_parts)
-
-#         # Write the updated data back to pyproject.toml
-#         f.seek(0)
-#         f.write(toml.dumps(data))
-#         f.truncate()  # Ensure file is truncated if new data is shorter
-
-#         return data["tool"]["poetry"]["version"]
-
 def _docker_run_ttt(component,version="latest"):
     if component != "gai-ttt":
         print("Wrong component found.")
@@ -37,10 +20,9 @@ def _docker_run_ttt(component,version="latest"):
     os.system(f"docker stop {component} && docker rm -f {component}")
     os.system(cmd)
 
-def main():
+def docker_run_ttt():
     here=os.path.dirname(__file__)
     pyproject_dir=os.path.join(here,'..')
-    dockerfile_dir=pyproject_dir
     pyproject_path=os.path.join(pyproject_dir,'pyproject.toml')
 
     # Get the version from the pyproject.toml file
@@ -51,4 +33,4 @@ def main():
     _docker_run_ttt(component="gai-ttt",version=version)
 
 if __name__ == "__main__":
-    main()
+    docker_run_ttt()
