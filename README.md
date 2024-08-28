@@ -6,10 +6,17 @@ This repository is designed to be used with Visual Studio Code and Docker DevCon
 
 **Instructions**:
 
-a) Open in Visual Studio Code.
+a) Create .venv virtual environment
 
-b) Click bottom left corner blue button.
+```
+python3.10 -m venv .venv
+source .venv/bin/activate
+```
 
-c) Select "Reopen in Container"
+b) Open in Visual Studio Code.
 
-d) Continue with the instructions in the [docs](./docs/gai-ttt-exllamav2-mistral7b.ipynb) folder.
+c) Click bottom left corner blue button.
+
+d) Select "Reopen in Container"
+
+e) Continue with the instructions in the [docs](./docs/gai-ttt-exllamav2-mistral7b.ipynb) folder.
