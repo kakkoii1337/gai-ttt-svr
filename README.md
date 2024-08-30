@@ -19,4 +19,4 @@ c) Click bottom left corner blue button.
 
 d) Select "Reopen in Container"
 
-e) Continue with the instructions in the [docs](./docs/gai-ttt-ollama-llama3.ipynb) folder.
+e) Continue with the instructions in the [docs](./docs/gai-ttt-llamacpp-mistral7b.ipynb) folder.
