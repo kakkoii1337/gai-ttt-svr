@@ -392,10 +392,10 @@ class GaiExLlamav2:
         factory = CompletionsFactory()        
         if not stream:
             if self.is_using_tools(self.job_state):
-                logger.info(f"ExLlama_TTT2: factory.message.build_toolcall(response)")
+                logger.info(f"gai_exllamav2: factory.message.build_toolcall(response)")
                 return factory.message.build_toolcall(response)
             else:
-                logger.info(f"ExLlama_TTT2: factory.message.build_content(response)")
+                logger.info(f"gai_exllamav2: factory.message.build_content(response)")
                 return factory.message.build_content(response)
         else:
             return (chunk for chunk in factory.chunk.build_stream(response))

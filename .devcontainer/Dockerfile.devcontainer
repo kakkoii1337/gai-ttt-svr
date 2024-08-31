@@ -65,7 +65,8 @@ SHELL ["/bin/bash","-c"]
 ENV PATH="${HOME_PATH}/.venv/bin:${PATH}"
 
 # Copy files
-COPY --from=build ${PACKAGES_PATH} ${PACKAGES_PATH}
+COPY --from=build ${PACKAGES_PATH}/torch ${PACKAGES_PATH}/torch
+COPY --from=build ${PACKAGES_PATH}/torch-2.2.0-py3.10.egg-info ${PACKAGES_PATH}/torch-2.2.0-py3.10.egg-info
 COPY --from=build ${DOWNLOAD_PATH} ${DOWNLOAD_PATH}
 
 # Install
