@@ -1,0 +1,85 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "PyPI: update gai-sdk",
+            "type": "shell",
+            "command": "/bin/bash",
+            "args": [
+                "-c",
+                "poetry remove gai-sdk || poetry cache clear PyPI --all -n && poetry add gai-sdk"
+            ],
+            "problemMatcher": []
+        },
+        {
+            "label": "Docker: build",
+            "type": "shell",
+            "command": "/bin/bash",
+            "args": [
+                "-c",
+                "source ${workspaceFolder}/.venv/bin/activate && gai docker build ${workspaceFolder}/pyproject.toml gai-ttt"
+            ],
+            "problemMatcher": []
+        },
+        {
+            "label": "Docker: build devcontainer",
+            "type": "shell",
+            "command": "/bin/bash",
+            "args": [
+                "-c",
+                "cd ${workspaceFolder}/.vscode && python docker_build_devcontainer.py"
+            ],
+            "problemMatcher": []
+        },
+        {
+            "label": "Docker: push",
+            "type": "shell",
+            "command": "/bin/bash",
+            "args": [
+                "-c",
+                "gai docker push ${workspaceFolder}/pyproject.toml gai-ttt"
+            ],
+            "problemMatcher": []
+        },
+        {
+            "label": "Docker: push devcontainer",
+            "type": "shell",
+            "command": "/bin/bash",
+            "args": [
+                "-c",
+                "cd ${workspaceFolder}/.vscode && python docker_push_devcontainer.py"
+            ],
+            "problemMatcher": []
+        }
+        {
+            "label": "Docker: stop",
+            "type": "shell",
+            "command": "/bin/bash",
+            "args": [
+                "-c",
+                "gai docker stop gai-ttt"
+            ],
+            "problemMatcher": []
+        },
+        {
+            "label": "Docker: run",
+            "type": "shell",
+            "command": "/bin/bash",
+            "args": [
+                "-c",
+                "source ${workspaceFolder}/.venv/bin/activate && python ${workspaceFolder}/.vscode/docker_run.py"
+            ],
+            "problemMatcher": []
+        },
+        {
+            "label": "Docker: idle",
+            "type": "shell",
+            "command": "/bin/bash",
+            "args": [
+                "-c",
+                "source ${workspaceFolder}/.venv/bin/activate && python ${workspaceFolder}/.vscode/docker_idle.py"
+            ],
+            "problemMatcher": []
+        },
+    ]
+}

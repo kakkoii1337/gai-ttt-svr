@@ -614,17 +614,18 @@ tqdm = ["tqdm"]
 
 [[package]]
 name = "gai-sdk"
-version = "0.259"
+version = "0.261"
 description = "Refer to https://gai-labs.github.io/gai for more information"
 optional = false
 python-versions = ">3.10"
 files = [
-    {file = "gai_sdk-0.259-py3-none-any.whl", hash = "sha256:15411b7fc7436ce09ffd5a767ec3afaa733ff712bc09705c9cfb2fdbc5f6cb9f"},
-    {file = "gai_sdk-0.259.tar.gz", hash = "sha256:e63896ab12cd311fa26c0cd2abc07510e0d65965ca67b5f3655084308baec433"},
+    {file = "gai_sdk-0.261-py3-none-any.whl", hash = "sha256:81dcf468e302224d8c8b6c4ec12f035a9a5d84321911a768893e7d6662942b72"},
+    {file = "gai_sdk-0.261.tar.gz", hash = "sha256:debf7cc3aa07bb514412cce8db8b7305e66342dc38df57e2201883dd94c1047c"},
 ]
 
 [package.dependencies]
 click = ">=8.1.7,<9.0.0"
+colorlog = ">=6.8.2,<7.0.0"
 fastapi = "*"
 huggingface_hub = ">=0.24.5,<0.25.0"
 numpy = ">=1.22.0,<2.0.0"
@@ -2830,4 +2831,4 @@ type = ["pytest-mypy"]
 [metadata]
 lock-version = "2.0"
 python-versions = ">3.10,<4.0"
-content-hash = "6ac0993ae0a827bee4d7c277a571a356ad7a2ab747e9d9c00b9673897a50f502"
+content-hash = "81bb719fe4fad9b1251341e006500818e30ab1b8509284dd53c726ccf9c8b229"

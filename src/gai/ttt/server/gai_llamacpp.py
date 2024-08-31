@@ -29,9 +29,9 @@ class GaiLlamaCpp:
 
     def __init__(self,gai_config,verbose=True):
         if (gai_config is None):
-            raise Exception("GaiExLlamav2: gai_config is required")
+            raise Exception("gai_llamacpp: gai_config is required")
         if gai_config.get("model_filepath",None) is None:
-            raise Exception("GaiExLlamav2: model_filepath is required")
+            raise Exception("gai_llamacpp: model_filepath is required")
         self.__verbose=verbose
         self.gai_config = gai_config
         
@@ -40,7 +40,7 @@ class GaiLlamaCpp:
         self.client = None
 
     def load(self):
-        logger.info(f"exllama_engine.load: Loading model from {self.model_filepath}")
+        logger.info(f"gai_llamacpp.load: Loading model from {self.model_filepath}")
         self.client = Llama(model_path=self.model_filepath, verbose=False, n_ctx=self.gai_config["max_seq_len"])
         self.client.verbose=False
         return self
