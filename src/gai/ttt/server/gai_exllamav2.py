@@ -34,9 +34,9 @@ class GaiExLlamav2:
 
     def __init__(self, gai_config,verbose=True):
         if (gai_config is None):
-            raise Exception("ExLlama_TTT2: gai_config is required")
+            raise Exception("GaiExLlamav2: gai_config is required")
         if gai_config.get("model_path",None) is None:
-            raise Exception("ExLlama_TTT2: model_path is required")
+            raise Exception("GaiExLlamav2: model_path is required")
         self.__verbose=verbose
         self.gai_config = gai_config
 
