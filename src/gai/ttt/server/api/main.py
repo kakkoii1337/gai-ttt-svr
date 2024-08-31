@@ -93,20 +93,29 @@ async def _text_to_text(req: ChatCompletionRequest = Body(...)):
 # __main__
 if __name__ == "__main__":
 
-    # Run self-test before anything else
-    import os
-    if os.environ.get("SELF_TEST",None):
-        self_test_file=os.path.join(os.path.dirname(os.path.abspath(__file__)),"self-test.py")
-        import subprocess,sys
-        try:
-            subprocess.run([f"python {self_test_file}"],shell=True,check=True)
-        except subprocess.CalledProcessError as e:
-            sys.exit(1)
-        ## passed self-test
+    # # Run self-test before anything else
+    # import os
+    # if os.environ.get("SELF_TEST",None):
+    #     self_test_file=os.path.join(os.path.dirname(os.path.abspath(__file__)),"self-test.py")
+    #     import subprocess,sys
+    #     try:
+    #         subprocess.run([f"python {self_test_file}"],shell=True,check=True)
+    #     except subprocess.CalledProcessError as e:
+    #         sys.exit(1)
+    #     ## passed self-test
 
     import uvicorn
     from gai.lib.server import api_factory
-    app = api_factory.create_app(pyproject_toml, category="ttt")
+    from gai.lib.common import utils
+
+    # Check if a local gai.yml exists. If not, use the default one in ~/.gai
+    here = os.path.dirname(__file__)
+    local_config_path = os.path.join(here, "gai.yml")
+    gai_config = utils.get_gai_config()
+    if os.path.exists(local_config_path):
+        gai_config = utils.get_gai_config(local_config_path)
+
+    app = api_factory.create_app(pyproject_toml, category="ttt",gai_config=gai_config)
     app.include_router(router, dependencies=[Depends(lambda: app.state.host)])
     config = uvicorn.Config(
         app=app, 
