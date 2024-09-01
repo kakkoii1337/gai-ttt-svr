@@ -115,6 +115,11 @@ if __name__ == "__main__":
     if os.path.exists(local_config_path):
         gai_config = utils.get_gai_config(local_config_path)
 
+    logger.info("Hyperparameters:")
+    generator = gai_config["gen"]["default"]["ttt"]
+    hyperparameters=gai_config["gen"][generator]["hyperparameters"]
+    for key in hyperparameters:
+        logger.info(f"\t{key}\t: {hyperparameters[key]}")
     app = api_factory.create_app(pyproject_toml, category="ttt",gai_config=gai_config)
     app.include_router(router, dependencies=[Depends(lambda: app.state.host)])
     config = uvicorn.Config(
