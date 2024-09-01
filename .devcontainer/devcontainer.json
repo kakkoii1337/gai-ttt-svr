@@ -1,5 +1,5 @@
 {
-	"name": "gai-ttt-svr",
+	"name": "gai-ttt-svr-llamacpp",
 	"build": {
 		"dockerfile": "Dockerfile.devcontainer",
 		"args": {
@@ -30,9 +30,12 @@
 	"forwardPorts": [
 		12031
 	],
-	"appPort": [
-		"12031:12031"
-	],
+	"features": {
+		"ghcr.io/devcontainers/features/docker-in-docker:1": {
+			"version": "latest",
+			"moby": true
+		}
+	},
 	"remoteUser": "kakkoii1337",
 	"postCreateCommand": "/bin/bash ${HOME}/postCreateCommand.sh"
 }

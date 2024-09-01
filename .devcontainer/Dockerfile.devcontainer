@@ -1,75 +1,18 @@
-FROM kakkoii1337/gai_torch2.2.0_cuda12.1_ubuntu22.04_devcontainer:1.0.25 AS build
+FROM kakkoii1337/gai_torch2.2.0_cuda12.1_ubuntu22.04_devcontainer:1.0.96 AS build
 
-FROM pytorch/pytorch:2.2.0-cuda12.1-cudnn8-devel
-
-# devcontainer Options
-ARG INSTALL_ZSH="true"
-ARG UPGRADE_PACKAGES="false"
-ARG USERNAME="kakkoii1337"
-ARG USER_UID=1000
-ARG USER_GID=$USER_UID
-ARG LIBRARY_SCRIPT_PATH=".devcontainer/library-scripts"
-ARG PYTHON_VERSION="python3.10"
-
-# Environment variables
-ENV DEBIAN_FRONTEND=noninteractive PIP_PREFER_BINARY=1
-ENV TORCH_CUDA_ARCH_LIST="7.5 8.0 8.6+PTX"
-ENV PYTHON_VERSION=${PYTHON_VERSION}
-
-# Copy necessary scripts, install system deps and create non-root user
-COPY ${LIBRARY_SCRIPT_PATH}/*.sh ${LIBRARY_SCRIPT_PATH}/*.env /tmp/library-scripts/
-
-# Install system deps
-RUN --mount=type=cache,target=/var/lib/apt/lists \
-    --mount=type=cache,target=/var/cache,sharing=locked \
-    apt-get update  \
-    && apt-get upgrade --assume-yes \
-    && apt-get install --assume-yes --no-install-recommends \
-        sudo \
-        git \
-        curl \
-        ca-certificates \
-        gnupg \
-        lsb-release \
-        wget \
-    # Install common packages, non-root user
-    && bash /tmp/library-scripts/common-debian.sh "${INSTALL_ZSH}" "${USERNAME}" "${USER_UID}" "${USER_GID}" "${UPGRADE_PACKAGES}" "true" "true" \
-    && apt-get autoremove -y && apt-get clean -y && rm -rf /var/lib/apt/lists/*
-
-# Switch to non-root user
-USER $USERNAME
 ENV HOME_PATH="/home/$USERNAME"
-ENV PACKAGES_PATH="${HOME_PATH}/.venv/lib/${PYTHON_VERSION}/site-packages"
-ENV DOWNLOAD_PATH="${HOME_PATH}/downloads"
-ARG CACHEBUST=1    
-
-# Install Python deps
-RUN --mount=type=cache,target=/root/.cache/pip \
-    pip install \
-        setuptools \
-        wheel \
-        build \
-        notebook \
-        jupyterlab \
-        ipywidgets \
-        pytest \
-        nest-asyncio
+ENV DOWNLOAD_PATH="/tmp/gai-downloads"
 
 # Install poetry
 RUN curl -sSL https://install.python-poetry.org | python3 - 
 ENV PATH="${HOME_PATH}/.local/bin:${PATH}"
 
-# Setup virtual env
-RUN python -m venv ${HOME_PATH}/.venv
-SHELL ["/bin/bash","-c"]
-ENV PATH="${HOME_PATH}/.venv/bin:${PATH}"
-
-# Copy files
-COPY --from=build ${PACKAGES_PATH} ${PACKAGES_PATH}
-COPY --from=build ${DOWNLOAD_PATH} ${DOWNLOAD_PATH}
-
-# Install
-RUN pip install --no-cache-dir --no-deps --no-index --find-links ${PACKAGES_PATH} ${DOWNLOAD_PATH}/llama_cpp_python-0.2.90-cp310-cp310-linux_x86_64.whl
+# Install exllamav2
+# ENV FILE="exllamav2-0.1.8+cu121.torch2.2.2-cp310-cp310-linux_x86_64.whl"
+# RUN pip install --no-cache-dir --no-deps --no-index --find-links ${PACKAGES_PATH} ${DOWNLOAD_PATH}/${FILE}
+# ENV FILE="llama_cpp_python-0.2.90-cp310-cp310-linux_x86_64.whl"
+# RUN pip install --no-cache-dir --no-deps --no-index --find-links ${PACKAGES_PATH} ${DOWNLOAD_PATH}/${FILE} \
+#     && rm -rf /tmp/gai-downloads/*
 
 # Create .gairc
 RUN echo "{\"app_dir\":\"${HOME_PATH}/.gai\"}" > ${HOME_PATH}/.gairc && mkdir -p ${HOME_PATH}/.gai
@@ -80,4 +23,3 @@ ENV CATEGORY="ttt"
 VOLUME ${HOME_PATH}/.gai
 
 COPY .devcontainer/postCreateCommand.sh ${HOME_PATH}/postCreateCommand.sh
-
