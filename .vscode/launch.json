@@ -11,7 +11,7 @@
                 "PYTHONUNBUFFERED": "1"
             },
             "program": "${workspaceFolder}/src/gai/ttt/server/api/main.py",
-            "justMyCode": false,
+            "justMyCode": false
         },
         {
             "name": "Python Debugger: Current File",

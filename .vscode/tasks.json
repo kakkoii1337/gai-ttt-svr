@@ -12,22 +12,36 @@
             "problemMatcher": []
         },
         {
-            "label": "Docker: build",
-            "type": "shell",
-            "command": "/bin/bash",
-            "args": [
-                "-c",
-                "source ${workspaceFolder}/.venv/bin/activate && gai docker build ${workspaceFolder}/pyproject.toml gai-ttt"
-            ],
-            "problemMatcher": []
-        },
-        {
             "label": "Docker: build devcontainer",
             "type": "shell",
             "command": "/bin/bash",
             "args": [
                 "-c",
-                "cd ${workspaceFolder}/.vscode && python docker_build_devcontainer.py"
+                //"cd ${workspaceFolder}/.vscode && python docker_build_devcontainer.py",
+                "cd ${workspaceFolder}/.vscode && python docker_tools.py build gai-ttt-llamacpp-devcontainer --repo_name='kakkoii1337' --docker_file='../.devcontainer/Dockerfile.devcontainer' --no-cache",
+                //"devcontainer build --workspace-folder=${workspaceFolder} --image-name=gai_ttt_llamacpp_devcontainer:latest --no-cache"
+            ],
+            "problemMatcher": []
+        },
+        {
+            "label": "Docker: push devcontainer",
+            "type": "shell",
+            "command": "/bin/bash",
+            "args": [
+                "-c",
+                "cd ${workspaceFolder}/.vscode && python docker_tools.py push gai-ttt-llamacpp-devcontainer --repo_name='kakkoii1337' --docker_file='../.devcontainer/Dockerfile.devcontainer'",
+                //"cd ${workspaceFolder}/.vscode && python docker_push_devcontainer.py"
+                //"devcontainer build --workspace-folder=${workspaceFolder} --push=true --image-name=image-name=gai_ttt_llamacpp_devcontainer:latest"
+            ],
+            "problemMatcher": []
+        },
+        {
+            "label": "Docker: build",
+            "type": "shell",
+            "command": "/bin/bash",
+            "args": [
+                "-c",
+                "source ${workspaceFolder}/.venv/bin/activate && gai docker build ${workspaceFolder}/pyproject.toml gai-ttt",
             ],
             "problemMatcher": []
         },
@@ -41,16 +55,6 @@
             ],
             "problemMatcher": []
         },
-        {
-            "label": "Docker: push devcontainer",
-            "type": "shell",
-            "command": "/bin/bash",
-            "args": [
-                "-c",
-                "cd ${workspaceFolder}/.vscode && python docker_push_devcontainer.py"
-            ],
-            "problemMatcher": []
-        }
         {
             "label": "Docker: stop",
             "type": "shell",

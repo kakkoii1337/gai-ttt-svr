@@ -4,7 +4,7 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.poetry]
 name = "gai-ttt-svr-llamacpp"
-version = "0.268"
+version = "0.286"
 description = "Refer to https://gai-labs.github.io/gai for more information"
 authors = [ "kakkoii1337 <kakkoii1337@gmail.com>",]
 license = "MIT"
@@ -16,11 +16,10 @@ from = "./src"
 
 [tool.poetry.dependencies]
 python = ">3.10,<4.0"
+numpy = "1.26.4"
 toml = "0.10.2"
 tokenizers = "0.20.0"
 uvicorn = "0.30.6"
-diskcache = "^5.6.3"
-jinja2 = "^3.1.4"
 jsonschema = "^4.23.0"
 gai-sdk = "^0.261"
 

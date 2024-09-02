@@ -1,18 +1,42 @@
-FROM kakkoii1337/gai_torch2.2.0_cuda12.1_ubuntu22.04_devcontainer:1.0.96 AS build
+FROM debian:stable-slim AS downloader
 
+# Install wget
+RUN apt-get update && apt-get install -y wget && rm -rf /var/lib/apt/lists/*
+RUN wget "https://github.com/abetlen/llama-cpp-python/releases/download/v0.2.90-cu121/llama_cpp_python-0.2.90-cp310-cp310-linux_x86_64.whl" -P "/tmp"
+
+# -----
+
+FROM kakkoii1337/gai_torch2.2.0_cuda12.1_ubuntu22.04_devcontainer_base:1.0.135 AS build
+
+ARG USERNAME="kakkoii1337"
+ENV USERNAME=${USERNAME}
+USER $USERNAME
 ENV HOME_PATH="/home/$USERNAME"
-ENV DOWNLOAD_PATH="/tmp/gai-downloads"
 
-# Install poetry
-RUN curl -sSL https://install.python-poetry.org | python3 - 
-ENV PATH="${HOME_PATH}/.local/bin:${PATH}"
+# Print the base image version for debugging
+RUN echo "Actual base image version below" && \
+    echo "===============================" && \
+    cat "$HOME_PATH/pyproject.toml" | grep "version"
 
-# Install exllamav2
-# ENV FILE="exllamav2-0.1.8+cu121.torch2.2.2-cp310-cp310-linux_x86_64.whl"
-# RUN pip install --no-cache-dir --no-deps --no-index --find-links ${PACKAGES_PATH} ${DOWNLOAD_PATH}/${FILE}
-# ENV FILE="llama_cpp_python-0.2.90-cp310-cp310-linux_x86_64.whl"
-# RUN pip install --no-cache-dir --no-deps --no-index --find-links ${PACKAGES_PATH} ${DOWNLOAD_PATH}/${FILE} \
-#     && rm -rf /tmp/gai-downloads/*
+# Install Python tools
+RUN source ${HOME_PATH}/.venv/bin/activate \
+    && pip install --upgrade pip==24.2 \
+    &&  pip install \
+        setuptools \
+        wheel \
+        build \
+        notebook \
+        jupyterlab \
+        ipywidgets \
+        pytest \
+        ipynb \
+        toml \
+        nest-asyncio
+
+# Install llama_cpp_python-0.2.90-cp310-cp310-linux_x86_64.whl
+COPY --chown=${USERNAME} --from=downloader /tmp/llama_cpp_python-0.2.90-cp310-cp310-linux_x86_64.whl /tmp/llama_cpp_python-0.2.90-cp310-cp310-linux_x86_64.whl
+RUN source ${HOME_PATH}/.venv/bin/activate \
+    && pip install "/tmp/llama_cpp_python-0.2.90-cp310-cp310-linux_x86_64.whl"
 
 # Create .gairc
 RUN echo "{\"app_dir\":\"${HOME_PATH}/.gai\"}" > ${HOME_PATH}/.gairc && mkdir -p ${HOME_PATH}/.gai
@@ -22,4 +46,4 @@ ENV MODEL_PATH="${HOME_PATH}/.gai/models"
 ENV CATEGORY="ttt"
 VOLUME ${HOME_PATH}/.gai
 
-COPY .devcontainer/postCreateCommand.sh ${HOME_PATH}/postCreateCommand.sh
+COPY --chown=${USERNAME} .devcontainer/postCreateCommand.sh ${HOME_PATH}/postCreateCommand.sh

@@ -1,0 +1,12 @@
+1. Test virtual environment
+
+2. Test numpy version
+
+3. Build no cache
+
+4. Test manual installing llamacpp
+
+4. Test python import torch
+
+5. F5
+RuntimeError: Failed to load shared library '/home/kakkoii1337/.venv/lib/python3.10/site-packages/llama_cpp/lib/libllama.so': /lib/x86_64-linux-gnu/libm.so.6: version `GLIBC_2.29' not found (required by /home/kakkoii1337/.venv/lib/python3.10/site-packages/llama_cpp/lib/libllama.so)
