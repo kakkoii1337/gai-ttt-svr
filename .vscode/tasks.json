@@ -32,6 +32,26 @@
             "problemMatcher": []
         },
         {
+            "label": "Docker: run devcontainer",
+            "type": "shell",
+            "command": "/bin/bash",
+            "args": [
+                "-c",
+                "cd ${workspaceFolder}/.vscode && devcontainer up"
+            ],
+            "problemMatcher": []
+        },
+        {
+            "label": "Docker: stop devcontainer",
+            "type": "shell",
+            "command": "/bin/bash",
+            "args": [
+                "-c",
+                "cd ${workspaceFolder}/.vscode && devcontainer down"
+            ],
+            "problemMatcher": []
+        },
+        {
             "label": "Docker: push",
             "type": "shell",
             "command": "/bin/bash",

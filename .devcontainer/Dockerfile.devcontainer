@@ -1,16 +1,34 @@
-FROM kakkoii1337/gai_torch2.2.0_cuda12.1_ubuntu22.04_devcontainer:latest AS build
+FROM debian:stable-slim AS downloader
 
-ENV HOME_PATH="/home/$USERNAME"
-ENV DOWNLOAD_PATH="/tmp/gai-downloads"
+# Install wget
+RUN apt-get update && apt-get install -y wget && rm -rf /var/lib/apt/lists/*
+RUN wget "https://github.com/turboderp/exllamav2/releases/download/v0.1.8/exllamav2-0.1.8+cu121.torch2.2.2-cp310-cp310-linux_x86_64.whl" -P "/tmp"
 
-# Install poetry
-RUN curl -sSL https://install.python-poetry.org | python3 - 
-ENV PATH="${HOME_PATH}/.local/bin:${PATH}"
+# -----
 
-# Install exllamav2
-ENV FILE="exllamav2-0.1.8+cu121.torch2.2.2-cp310-cp310-linux_x86_64.whl"
-RUN pip install --no-cache-dir --no-deps --no-index --find-links ${PACKAGES_PATH} ${DOWNLOAD_PATH}/${FILE} \
-    && rm -rf /tmp/gai-downloads/*
+FROM kakkoii1337/gai_torch2.2.0_cuda12.1_ubuntu22.04_devcontainer_base:latest AS build
+
+ENV HOME_PATH="/home/kakkoii1337"
+
+# Install Python tools
+RUN source ${HOME_PATH}/.venv/bin/activate \
+    && pip install --upgrade pip==24.2 \
+    &&  pip install \
+        setuptools \
+        wheel \
+        build \
+        notebook \
+        jupyterlab \
+        ipywidgets \
+        pytest \
+        ipynb \
+        toml \
+        nest-asyncio
+
+# Install exllamav2-0.1.8+cu121.torch2.2.2-cp310-cp310-linux_x86_64.whl
+COPY --from=downloader /tmp/exllamav2-0.1.8+cu121.torch2.2.2-cp310-cp310-linux_x86_64.whl /tmp/exllamav2-0.1.8+cu121.torch2.2.2-cp310-cp310-linux_x86_64.whl
+RUN source ${HOME_PATH}/.venv/bin/activate \
+    && pip install "/tmp/exllamav2-0.1.8+cu121.torch2.2.2-cp310-cp310-linux_x86_64.whl"
 
 # Create .gairc
 RUN echo "{\"app_dir\":\"${HOME_PATH}/.gai\"}" > ${HOME_PATH}/.gairc && mkdir -p ${HOME_PATH}/.gai
