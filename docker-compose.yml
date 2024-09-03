@@ -1,0 +1,25 @@
+services:
+  gai-ttt-svr-exllamav2:
+    image: kakkoii1337/gai-ttt-svr-exllamav2:latest
+    environment:
+      DEFAULT_GENERATOR: "ttt-exllamav2-mistral7b"
+      SWAGGER_URL: "/doc"
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              capabilities: [gpu]
+    volumes:
+      - ~/.gai:/root/.gai
+    ports:
+      - "12031:12031"
+      - "5678:5678"
+    networks:
+      - default
+    restart: always
+    command: >
+      python -m debugpy --listen 0.0.0.0:5678 main.py
+    #command: python -m debugpy --listen 0.0.0.0:5678 main.py --wait-for-client
+    #command: sleep infinity
+

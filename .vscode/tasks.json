@@ -52,32 +52,22 @@
             "problemMatcher": []
         },
         {
-            "label": "Docker: stop",
+            "label": "docker-compose: up",
             "type": "shell",
             "command": "/bin/bash",
             "args": [
                 "-c",
-                "gai docker stop gai-ttt-svr-exllamav2"
+                "docker compose -f ${workspaceFolder}/docker-compose.yml up"
             ],
             "problemMatcher": []
         },
         {
-            "label": "Docker: run",
+            "label": "docker-compose: down",
             "type": "shell",
             "command": "/bin/bash",
             "args": [
                 "-c",
-                "python ${workspaceFolder}/.vscode/docker_run.py"
-            ],
-            "problemMatcher": []
-        },
-        {
-            "label": "Docker: idle",
-            "type": "shell",
-            "command": "/bin/bash",
-            "args": [
-                "-c",
-                "python ${workspaceFolder}/.vscode/docker_idle.py"
+                "docker compose -f ${workspaceFolder}/docker-compose.yml down"
             ],
             "problemMatcher": []
         },

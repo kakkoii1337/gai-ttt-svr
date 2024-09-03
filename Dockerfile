@@ -31,6 +31,9 @@ VOLUME /root/.gai
 ENV MODEL_PATH="/root/.gai/models"
 ENV CATEGORY=${CATEGORY}
 WORKDIR /workspaces/${PROJECT_NAME}/src/gai/ttt/server/api
+
+# Install debugpy and start
 RUN echo 0
+RUN pip install debugpy
 COPY startup.sh .
 CMD ["bash","startup.sh"]
