@@ -22,6 +22,11 @@ import uuid
 router = APIRouter()
 pyproject_toml = os.path.join(os.path.dirname(os.path.abspath(__file__)),"..", "..", "..", "..", "..", "pyproject.toml")
 
+# Add this at the beginning, before your other routes
+@router.get("/")
+async def root():
+    return JSONResponse(status_code=200, content={"message": "gai-ttt-svr-exllamav2"})
+
 ### ----------------- TTS ----------------- ###
 
 # GET /gen/v1/chat/version

@@ -6,9 +6,17 @@ RUN wget "https://github.com/turboderp/exllamav2/releases/download/v0.1.8/exllam
 
 # -----
 
-FROM kakkoii1337/gai_torch2.2.0_cuda12.1_ubuntu22.04_devcontainer_base:latest AS build
+FROM kakkoii1337/gai_torch2.2.0_cuda12.1_ubuntu22.04_devcontainer_base:1.0.135 AS build
 
-ENV HOME_PATH="/home/kakkoii1337"
+ARG USERNAME="kakkoii1337"
+ENV USERNAME=${USERNAME}
+USER $USERNAME
+ENV HOME_PATH="/home/$USERNAME"
+
+# Print the base image version for debugging
+RUN echo "Actual base image version below" && \
+    echo "===============================" && \
+    cat "$HOME_PATH/pyproject.toml" | grep "version"
 
 # Install Python tools
 RUN source ${HOME_PATH}/.venv/bin/activate \
@@ -26,7 +34,7 @@ RUN source ${HOME_PATH}/.venv/bin/activate \
         nest-asyncio
 
 # Install exllamav2-0.1.8+cu121.torch2.2.2-cp310-cp310-linux_x86_64.whl
-COPY --from=downloader /tmp/exllamav2-0.1.8+cu121.torch2.2.2-cp310-cp310-linux_x86_64.whl /tmp/exllamav2-0.1.8+cu121.torch2.2.2-cp310-cp310-linux_x86_64.whl
+COPY --chown=${USERNAME} --from=downloader /tmp/exllamav2-0.1.8+cu121.torch2.2.2-cp310-cp310-linux_x86_64.whl /tmp/exllamav2-0.1.8+cu121.torch2.2.2-cp310-cp310-linux_x86_64.whl
 RUN source ${HOME_PATH}/.venv/bin/activate \
     && pip install "/tmp/exllamav2-0.1.8+cu121.torch2.2.2-cp310-cp310-linux_x86_64.whl"
 
@@ -38,4 +46,4 @@ ENV MODEL_PATH="${HOME_PATH}/.gai/models"
 ENV CATEGORY="ttt"
 VOLUME ${HOME_PATH}/.gai
 
-COPY .devcontainer/postCreateCommand.sh ${HOME_PATH}/postCreateCommand.sh
+COPY  --chown=${USERNAME} .devcontainer/postCreateCommand.sh ${HOME_PATH}/postCreateCommand.sh

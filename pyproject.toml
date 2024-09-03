@@ -1,42 +1,24 @@
 [build-system]
-requires = [ "poetry-core>=1.8.3",]
-build-backend = "poetry.core.masonry.api"
+requires = [ "setuptools>=42", "wheel",]
+build-backend = "setuptools.build_meta"
 
-[tool.poetry]
+[project]
 name = "gai-ttt-svr-exllamav2"
-version = "0.266"
+version = "0.309"
 description = "Refer to https://gai-labs.github.io/gai for more information"
-authors = [ "kakkoii1337 <kakkoii1337@gmail.com>",]
-license = "MIT"
+readme = "README.md"
 classifiers = [ "Programming Language :: Python :: 3.10", "Development Status :: 3 - Alpha", "License :: OSI Approved :: MIT License", "Intended Audience :: Science/Research", "Intended Audience :: Developers", "Operating System :: OS Independent", "Topic :: Software Development", "Topic :: Software Development :: Libraries :: Python Modules", "Topic :: Scientific/Engineering :: Artificial Intelligence",]
-include = []
-[[tool.poetry.packages]]
-include = "gai/ttt/server"
-from = "./src"
+requires-python = ">=3.10"
+dependencies = [ "numpy==1.26.4", "toml==0.10.2", "tokenizers==0.20.0", "uvicorn==0.30.6", "jsonschema>=4.23.0", "gai-sdk>=0.261",]
+[[project.authors]]
+name = "kakkoii1337"
+email = "kakkoii1337@gmail.com"
 
-[tool.poetry.dependencies]
-python = ">3.10,<4.0"
-numpy = "1.26.4"
-toml = "0.10.2"
-tokenizers = "0.20.0"
-uvicorn = "0.30.6"
-jsonschema = "4.23.0"
-lm-format-enforcer = "0.10.6"
-#safetensors = "^0.4.4"
-#sentencepiece = "^0.2.0"
-gai-sdk = "^0.261"
-#sympy = "^1.13.2"
-#nvidia-cuda-runtime-cu12 = "12.1.105"
-#fastparquet = "^2024.5.0"
-#ninja = "^1.11.1.1"
-#pandas = "^2.2.2"
-#regex = "^2024.7.24"
+[project.license]
+file = "LICENSE"
 
-[tool.poetry.group.dev.dependencies]
-pytest = "*"
-nox = "*"
-twine = "*"
-"keyrings.alt" = "*"
-ipykernel = "*"
-flake8 = "*"
-pytest-ordering = "*"
+[project.optional-dependencies]
+dev = [ "pytest", "nox", "twine", "keyrings.alt", "ipykernel", "flake8", "pytest-ordering",]
+
+[project.urls]
+documentation = "https://gai-labs.github.io/gai/docs"

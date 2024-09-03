@@ -10,6 +10,7 @@
 	},
 	"runArgs": [
 		"--gpus=all",
+		"--network=host"
 		// Add a custom network that shares the same address space as WSL instance
 		//"--network=gai-sandbox"
 	],
@@ -30,14 +31,14 @@
 		}
 	},
 	"forwardPorts": [
-		12032
+		12031
 	],
-	// "features": {
-	// 	"ghcr.io/devcontainers/features/docker-in-docker:1": {
-	// 		"version": "latest",
-	// 		"moby": true
-	// 	}
-	// },
+	"features": {
+		"ghcr.io/devcontainers/features/docker-in-docker:1": {
+			"version": "latest",
+			"moby": true
+		}
+	},
 	"remoteUser": "kakkoii1337",
 	"postCreateCommand": "/bin/bash ${HOME}/postCreateCommand.sh"
 }
