@@ -22,7 +22,7 @@
             "justMyCode": false
         },
         {
-            "name": "Python Docker: gai-ttt container",
+            "name": "Attach",
             "type": "debugpy",
             "request": "attach",
             "connect": {
@@ -32,7 +32,7 @@
             "pathMappings": [
                 {
                     "localRoot": "${workspaceFolder}/src",
-                    "remoteRoot": "/app/src"
+                    "remoteRoot": "/workspaces/gai-ttt-svr-llamacpp/src"
                 }
             ]
             /*

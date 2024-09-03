@@ -7,7 +7,7 @@
             "command": "/bin/bash",
             "args": [
                 "-c",
-                "poetry remove gai-sdk || poetry cache clear PyPI --all -n && poetry add gai-sdk"
+                "pip install --upgrade gai-sdk"
             ],
             "problemMatcher": []
         },
@@ -17,9 +17,7 @@
             "command": "/bin/bash",
             "args": [
                 "-c",
-                //"cd ${workspaceFolder}/.vscode && python docker_build_devcontainer.py",
-                "cd ${workspaceFolder}/.vscode && python docker_tools.py build gai-ttt-llamacpp-devcontainer --repo_name='kakkoii1337' --docker_file='../.devcontainer/Dockerfile.devcontainer' --no-cache",
-                //"devcontainer build --workspace-folder=${workspaceFolder} --image-name=gai_ttt_llamacpp_devcontainer:latest --no-cache"
+                "gai docker build ${workspaceFolder}/pyproject.toml --dockerfile-path=${workspaceFolder}/.devcontainer/Dockerfile.devcontainer --image-name=gai-ttt-llamacpp_devcontainer"
             ],
             "problemMatcher": []
         },
@@ -29,9 +27,7 @@
             "command": "/bin/bash",
             "args": [
                 "-c",
-                "cd ${workspaceFolder}/.vscode && python docker_tools.py push gai-ttt-llamacpp-devcontainer --repo_name='kakkoii1337' --docker_file='../.devcontainer/Dockerfile.devcontainer'",
-                //"cd ${workspaceFolder}/.vscode && python docker_push_devcontainer.py"
-                //"devcontainer build --workspace-folder=${workspaceFolder} --push=true --image-name=image-name=gai_ttt_llamacpp_devcontainer:latest"
+                "gai docker push ${workspaceFolder}/pyproject.toml --dockerfile-path=${workspaceFolder}/.devcontainer/Dockerfile.devcontainer --image-name=gai-ttt-llamacpp_devcontainer"
             ],
             "problemMatcher": []
         },
@@ -41,7 +37,7 @@
             "command": "/bin/bash",
             "args": [
                 "-c",
-                "source ${workspaceFolder}/.venv/bin/activate && gai docker build ${workspaceFolder}/pyproject.toml gai-ttt",
+                "gai docker build ${workspaceFolder}/pyproject.toml"
             ],
             "problemMatcher": []
         },
@@ -51,7 +47,7 @@
             "command": "/bin/bash",
             "args": [
                 "-c",
-                "gai docker push ${workspaceFolder}/pyproject.toml gai-ttt"
+                "gai docker push ${workspaceFolder}/pyproject.toml"
             ],
             "problemMatcher": []
         },
@@ -61,7 +57,8 @@
             "command": "/bin/bash",
             "args": [
                 "-c",
-                "gai docker stop gai-ttt"
+                "docker compose -f ${workspaceFolder}/docker-compose.yml down"
+                //"gai docker stop gai-ttt-svr-llamacpp"
             ],
             "problemMatcher": []
         },
@@ -71,7 +68,8 @@
             "command": "/bin/bash",
             "args": [
                 "-c",
-                "source ${workspaceFolder}/.venv/bin/activate && python ${workspaceFolder}/.vscode/docker_run.py"
+                //"python ${workspaceFolder}/.vscode/docker_run.py"
+                "docker compose -f ${workspaceFolder}/docker-compose.yml up"
             ],
             "problemMatcher": []
         },
