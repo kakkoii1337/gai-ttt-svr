@@ -11,28 +11,28 @@
             ],
             "problemMatcher": []
         },
+        // {
+        //     "label": "Docker: build devcontainer",
+        //     "type": "shell",
+        //     "command": "/bin/bash",
+        //     "args": [
+        //         "-c",
+        //         "gai docker build ${workspaceFolder}/pyproject.toml --dockerfile-path=${workspaceFolder}/.devcontainer/Dockerfile.devcontainer --image-name=gai-ttt-exllamav2_devcontainer"
+        //     ],
+        //     "problemMatcher": []
+        // },
+        // {
+        //     "label": "Docker: push devcontainer",
+        //     "type": "shell",
+        //     "command": "/bin/bash",
+        //     "args": [
+        //         "-c",
+        //         "gai docker push ${workspaceFolder}/pyproject.toml --dockerfile-path=${workspaceFolder}/.devcontainer/Dockerfile.devcontainer --image-name=gai-ttt-exllamav2_devcontainer"
+        //     ],
+        //     "problemMatcher": []
+        // },
         {
-            "label": "Docker: build devcontainer",
-            "type": "shell",
-            "command": "/bin/bash",
-            "args": [
-                "-c",
-                "gai docker build ${workspaceFolder}/pyproject.toml --dockerfile-path=${workspaceFolder}/.devcontainer/Dockerfile.devcontainer --image-name=gai-ttt-exllamav2_devcontainer"
-            ],
-            "problemMatcher": []
-        },
-        {
-            "label": "Docker: push devcontainer",
-            "type": "shell",
-            "command": "/bin/bash",
-            "args": [
-                "-c",
-                "gai docker push ${workspaceFolder}/pyproject.toml --dockerfile-path=${workspaceFolder}/.devcontainer/Dockerfile.devcontainer --image-name=gai-ttt-exllamav2_devcontainer"
-            ],
-            "problemMatcher": []
-        },
-        {
-            "label": "Docker: build",
+            "label": "docker: build gai-ttt-svr-exllamav2",
             "type": "shell",
             "command": "/bin/bash",
             "args": [
@@ -42,7 +42,7 @@
             "problemMatcher": []
         },
         {
-            "label": "Docker: push",
+            "label": "docker: push gai-ttt-svr-exllamav2",
             "type": "shell",
             "command": "/bin/bash",
             "args": [
