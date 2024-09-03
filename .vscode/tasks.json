@@ -11,28 +11,28 @@
             ],
             "problemMatcher": []
         },
+        // {
+        //     "label": "docker: build devcontainer",
+        //     "type": "shell",
+        //     "command": "/bin/bash",
+        //     "args": [
+        //         "-c",
+        //         "gai docker build ${workspaceFolder}/pyproject.toml --dockerfile-path=${workspaceFolder}/.devcontainer/Dockerfile.devcontainer --image-name=gai-ttt-llamacpp_devcontainer"
+        //     ],
+        //     "problemMatcher": []
+        // },
+        // {
+        //     "label": "docker: push devcontainer",
+        //     "type": "shell",
+        //     "command": "/bin/bash",
+        //     "args": [
+        //         "-c",
+        //         "gai docker push ${workspaceFolder}/pyproject.toml --dockerfile-path=${workspaceFolder}/.devcontainer/Dockerfile.devcontainer --image-name=gai-ttt-llamacpp_devcontainer"
+        //     ],
+        //     "problemMatcher": []
+        // },
         {
-            "label": "Docker: build devcontainer",
-            "type": "shell",
-            "command": "/bin/bash",
-            "args": [
-                "-c",
-                "gai docker build ${workspaceFolder}/pyproject.toml --dockerfile-path=${workspaceFolder}/.devcontainer/Dockerfile.devcontainer --image-name=gai-ttt-llamacpp_devcontainer"
-            ],
-            "problemMatcher": []
-        },
-        {
-            "label": "Docker: push devcontainer",
-            "type": "shell",
-            "command": "/bin/bash",
-            "args": [
-                "-c",
-                "gai docker push ${workspaceFolder}/pyproject.toml --dockerfile-path=${workspaceFolder}/.devcontainer/Dockerfile.devcontainer --image-name=gai-ttt-llamacpp_devcontainer"
-            ],
-            "problemMatcher": []
-        },
-        {
-            "label": "Docker: build",
+            "label": "docker: build gai-ttt-svr-llamacpp",
             "type": "shell",
             "command": "/bin/bash",
             "args": [
@@ -42,7 +42,7 @@
             "problemMatcher": []
         },
         {
-            "label": "Docker: push",
+            "label": "docker: push gai-ttt-svr-llamacpp",
             "type": "shell",
             "command": "/bin/bash",
             "args": [
@@ -52,7 +52,7 @@
             "problemMatcher": []
         },
         {
-            "label": "Docker: stop",
+            "label": "docker-compose: down gai-ttt-svr-llamacpp",
             "type": "shell",
             "command": "/bin/bash",
             "args": [
@@ -63,23 +63,13 @@
             "problemMatcher": []
         },
         {
-            "label": "Docker: run",
+            "label": "docker-compose: up gai-ttt-svr-llamacpp",
             "type": "shell",
             "command": "/bin/bash",
             "args": [
                 "-c",
                 //"python ${workspaceFolder}/.vscode/docker_run.py"
                 "docker compose -f ${workspaceFolder}/docker-compose.yml up"
-            ],
-            "problemMatcher": []
-        },
-        {
-            "label": "Docker: idle",
-            "type": "shell",
-            "command": "/bin/bash",
-            "args": [
-                "-c",
-                "source ${workspaceFolder}/.venv/bin/activate && python ${workspaceFolder}/.vscode/docker_idle.py"
             ],
             "problemMatcher": []
         },

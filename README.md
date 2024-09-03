@@ -2,24 +2,14 @@
 
 This repository is designed to be used with Visual Studio Code and Docker DevContainer.
 
-![alt text](img/dev-container.png)
-
 **Instructions**:
 
-a) Create .venv virtual environment
+a) Open in Visual Studio Code.
 
-```
-python -m venv .venv
-source .venv/bin/activate
-pip install gai-sdk
-pip install ipykernel
-pip install colorlog
-```
+b) Click bottom left corner blue button.
 
-b) Open in Visual Studio Code.
+![alt text](img/dev-container.png)
 
-c) Click bottom left corner blue button.
+c) Select "Reopen in Container"
 
-d) Select "Reopen in Container"
-
-e) Continue with the instructions in the [docs](./docs/gai-ttt-llamacpp-mistral7b.ipynb) folder.
+d) Continue with the instructions in the [docs](./docs/gai-ttt-llamacpp-mistral7b.ipynb) folder.
