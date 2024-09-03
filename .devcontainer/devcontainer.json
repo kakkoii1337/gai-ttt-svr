@@ -1,13 +1,14 @@
 {
 	"name": "gai-ttt-svr-exllamav2",
-	"build": {
-		"dockerfile": "Dockerfile.devcontainer",
-		"args": {
-			"USERNAME": "kakkoii1337",
-			"CACHEBUST": "1"
-		},
-		"context": ".."
-	},
+	"image": "kakkoii1337/gai-ttt-exllamav2_devcontainer:1.0.2",
+	// "build": {
+	// 	"dockerfile": "Dockerfile.devcontainer",
+	// 	"args": {
+	// 		"USERNAME": "kakkoii1337",
+	// 		"CACHEBUST": "1"
+	// 	},
+	// 	"context": ".."
+	// },
 	"runArgs": [
 		"--gpus=all",
 		"--network=host"
