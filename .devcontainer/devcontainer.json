@@ -1,13 +1,14 @@
 {
 	"name": "gai-ttt-svr-llamacpp",
-	"build": {
-		"dockerfile": "Dockerfile.devcontainer",
-		"args": {
-			"USERNAME": "kakkoii1337",
-			"CACHEBUST": "1"
-		},
-		"context": ".."
-	},
+	// "build": {
+	// 	"dockerfile": "Dockerfile.devcontainer",
+	// 	"args": {
+	// 		"USERNAME": "kakkoii1337",
+	// 		"CACHEBUST": "1"
+	// 	},
+	// 	"context": ".."
+	// },
+	"image": "kakkoii1337/gai-ttt-llamacpp_devcontainer:1.0.1",
 	"runArgs": [
 		"--gpus=all",
 		"--network=host"

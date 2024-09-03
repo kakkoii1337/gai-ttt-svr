@@ -6,7 +6,7 @@ RUN wget "https://github.com/abetlen/llama-cpp-python/releases/download/v0.2.90-
 
 # -----
 
-FROM kakkoii1337/gai_torch2.2.0_cuda12.1_ubuntu22.04_devcontainer_base:1.0.135 AS build
+FROM kakkoii1337/gai_torch2.2.0_cuda12.1_ubuntu22.04_devcontainer_base:1.0.144 AS build
 
 ARG USERNAME="kakkoii1337"
 ENV USERNAME=${USERNAME}
