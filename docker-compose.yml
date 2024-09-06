@@ -1,6 +1,6 @@
 services:
   gai-ttt-svr-exllamav2:
-    image: kakkoii1337/gai-ttt-svr-exllamav2:1.0.3
+    image: kakkoii1337/gai-ttt-svr-exllamav2:1.0.5
     environment:
       DEFAULT_GENERATOR: "ttt-exllamav2-mistral7b"
       LOG_LEVEL: "DEBUG"
