@@ -6,6 +6,8 @@ from datetime import datetime
 from uuid import uuid4
 import re
 from jsonschema import validate, ValidationError
+from gai.lib.common.logging import getLogger
+logger = getLogger(__name__)
 
 class OutputMessageBuilder:
     """
@@ -30,50 +32,29 @@ class OutputMessageBuilder:
         jsoned = json.loads(text)
         schema = get_tools_schema()        
         try:
-            validate(instance={
-                "type":"function","function":jsoned
-            }, schema=schema)
-
-            function_name = None
-            if state == "function_name":
-                text = result["full_completion"]
-                text = re.sub(r'\s+', ' ', text)
-                function_name_pattern = r'\"name\"\s*:\s*\"(.*?)\",'
-                match = re.search(function_name_pattern, text, re.DOTALL)
-                if match:
-                    function_name=match.group(1)
-                    state = "function_args"
-
-            function_arguments = None
-            if state == "function_args":
-                text = result["full_completion"]
-                text = re.sub(r'\s+', ' ', text)
-                function_arguments_pattern = r'"(parameters|arguments)"\s*:\s*({.*?})'
-                match = re.search(function_arguments_pattern, text, re.DOTALL)
-                if match:
-                    function_arguments=match.group(2)
-                    # Remove escape sequence from keys
-                    function_arguments = function_arguments.replace("\\","")
-                    # If not parsable, return None and continue streaming.
-                    try:
-                        function_arguments = json.dumps(json.loads(function_arguments))
-                    except Exception as e:
-                        return None
-
-                    return OutputMessageBuilder(
-                        ).add_chat_completion(generator="exllamav2-mistral7b"
-                            ).add_choice(finish_reason='tool_calls'
-                                ).add_tool(
-                                    function_name=function_name,
-                                    function_arguments=function_arguments
-                                    ).add_usage(
-                                        prompt_tokens=result["prompt_tokens"],
-                                        new_tokens=result["new_tokens"]
-                                        ).build()
+            validate(instance=jsoned, schema=schema)
         except ValidationError as e:
-            return
-
-
+            id=str(uuid4())
+            logger.error(f"OutputMessageBuilder.build_toolcall: Failed validate. error={e} text={text} id={id}")
+            raise Exception(f"OutputMessageBuilder: id={id}")
+    
+        try:
+            function_name = jsoned["function"]["name"]
+            function_arguments = json.dumps(jsoned["function"]["arguments"])
+            return OutputMessageBuilder(
+                ).add_chat_completion(generator="exllamav2-mistral7b"
+                    ).add_choice(finish_reason='tool_calls'
+                        ).add_tool(
+                            function_name=function_name,
+                            function_arguments=function_arguments
+                            ).add_usage(
+                                prompt_tokens=result["prompt_tokens"],
+                                new_tokens=result["new_tokens"]
+                                ).build()
+        except ValidationError as e:
+            id=str(uuid4())
+            logger.error(f"OutputMessageBuilder.build_toolcall: error={e} text={text} id={id}")
+            raise Exception(f"OutputMessageBuilder: id={id}")
 
     def build_content(self,result):
         eos_reason=result["eos_reason"]
