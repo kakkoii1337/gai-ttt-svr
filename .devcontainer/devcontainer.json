@@ -16,7 +16,8 @@
 		//"--network=gai-sandbox"
 	],
 	"containerEnv": {
-		"DEFAULT_GENERATOR": "ttt-llamacpp-dolphin"
+		"DEFAULT_GENERATOR": "ttt-llamacpp-dolphin",
+		"MAX_SEQ_LEN": "8192"
 	},
 	"mounts": [
 		"source=${localEnv:HOME}/.gai,target=/home/kakkoii1337/.gai,type=bind,consistency=cached",
