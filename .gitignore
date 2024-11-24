@@ -14,15 +14,14 @@ yarn-debug.log*
 yarn-error.log*
 
 # PYTHON
-__pycache__/
 .pytest_cache/
 dist/
 *.egg-info/
 *.egg
-__pycache__
 .pytest*
 .nox
 .venv
+**/__pycache__
 
 # Misc
 build

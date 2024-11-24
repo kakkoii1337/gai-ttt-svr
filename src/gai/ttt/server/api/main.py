@@ -46,8 +46,8 @@ class ChatCompletionRequest(BaseModel):
     tools: Optional[list] = None
     tool_choice: Optional[str] = None
     json_schema: Optional[dict] = None    
-    max_tokens: Optional[int] = None
-    stop: Optional[list] = None
+    max_new_tokens: Optional[int] = None
+    stop_conditions: Optional[list] = None
     temperature: Optional[float] = None
     top_p: Optional[float] = None
     top_k: Optional[int] = None
@@ -64,8 +64,8 @@ async def _text_to_text(req: ChatCompletionRequest = Body(...)):
             tools=req.tools,
             tool_choice=req.tool_choice,
             json_schema=req.json_schema,
-            max_tokens=req.max_tokens,
-            stop=req.stop,
+            max_tokens=req.max_new_tokens,
+            stop=req.stop_conditions,
             temperature=req.temperature,
             top_p=req.top_p,
             top_k=req.top_k
@@ -75,9 +75,9 @@ async def _text_to_text(req: ChatCompletionRequest = Body(...)):
                 for chunk in response:
                     try:
                         if chunk is not None:
-                            chunk = jsonable_encoder(chunk)
-                            chunk = json.dumps(chunk) + "\n"
-                            yield chunk
+                            print(chunk.choices[0].delta.content, end="", flush=True)
+                            chunk = chunk.json() + "\n"
+                            yield chunk                            
                     except Exception as e:
                         logger.warn(f"Error in stream: {e}")
                         continue
@@ -94,7 +94,6 @@ async def _text_to_text(req: ChatCompletionRequest = Body(...)):
         logger.error(str(e)+f" id={id}")
         raise InternalException(id)
 
-
 # __main__
 if __name__ == "__main__":
 
@@ -108,6 +107,21 @@ if __name__ == "__main__":
     gai_config = utils.get_gai_config()
     if os.path.exists(local_config_path):
         gai_config = utils.get_gai_config(local_config_path)
+
+    # Override by environment variables
+    if os.getenv("DEFAULT_GENERATOR"):
+        gai_config["gen"]["default"]["ttt"] = os.getenv("DEFAULT_GENERATOR")
+
+    # Log hyperparameters
+    logger.info("Hyperparameters:")
+    generator = gai_config["gen"]["default"]["ttt"]
+    hyperparameters=gai_config["gen"][generator]["hyperparameters"]
+    for key in hyperparameters:
+        logger.info(f"\t{key}\t: {hyperparameters[key]}")
+    stop_conditions=gai_config["gen"][generator].get("stop_conditions",None)
+    logger.info(f"\tstop_conditions\t: {stop_conditions}")
+    model_path=gai_config["gen"][generator].get("model_path",None)
+    logger.info(f"\tmodel_path\t: {model_path}")
 
     app = api_factory.create_app(pyproject_toml, category="ttt",gai_config=gai_config)
     app.include_router(router, dependencies=[Depends(lambda: app.state.host)])
