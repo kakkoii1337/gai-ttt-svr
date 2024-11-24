@@ -135,6 +135,11 @@ if __name__ == "__main__":
     if os.path.exists(local_config_path):
         gai_config = utils.get_gai_config(local_config_path)
 
+    # Override by environment variables
+    if os.getenv("DEFAULT_GENERATOR"):
+        gai_config["gen"]["default"]["ttt"] = os.getenv("DEFAULT_GENERATOR")
+
+    # Log hyperparameters
     logger.info("Hyperparameters:")
     generator = gai_config["gen"]["default"]["ttt"]
     hyperparameters=gai_config["gen"][generator]["hyperparameters"]
