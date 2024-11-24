@@ -15,6 +15,10 @@
 		// Add a custom network that shares the same address space as WSL instance
 		//"--network=gai-sandbox"
 	],
+	"containerEnv": {
+		"DEFAULT_GENERATOR": "ttt-exllamav2-mistral7b",
+		"MAX_SEQ_LEN": "8192"
+	},
 	"mounts": [
 		"source=${localEnv:HOME}/.gai,target=/home/kakkoii1337/.gai,type=bind,consistency=cached",
 		"source=${localEnv:HOME}/.cache,target=/home/kakkoii1337/.cache,type=bind,consistency=cached",

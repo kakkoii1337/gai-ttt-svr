@@ -138,10 +138,12 @@ if __name__ == "__main__":
     # Override by environment variables
     if os.getenv("DEFAULT_GENERATOR"):
         gai_config["gen"]["default"]["ttt"] = os.getenv("DEFAULT_GENERATOR")
+    generator = gai_config["gen"]["default"]["ttt"]
+    if os.getenv("MAX_SEQ_LEN"):
+        gai_config["gen"][generator]["max_seq_len"] = int(os.getenv("MAX_SEQ_LEN"))
 
     # Log hyperparameters
     logger.info("Hyperparameters:")
-    generator = gai_config["gen"]["default"]["ttt"]
     hyperparameters=gai_config["gen"][generator]["hyperparameters"]
     for key in hyperparameters:
         logger.info(f"\t{key}\t: {hyperparameters[key]}")
@@ -149,6 +151,9 @@ if __name__ == "__main__":
     logger.info(f"\tstop_conditions\t: {stop_conditions}")
     model_path=gai_config["gen"][generator].get("model_path",None)
     logger.info(f"\tmodel_path\t: {model_path}")
+
+    max_seq_len=gai_config["gen"][generator].get("max_seq_len",None)
+    logger.info(f"\tmax_seq_len\t: {max_seq_len}")
 
     app = api_factory.create_app(pyproject_toml, category="ttt",gai_config=gai_config)
     app.include_router(router, dependencies=[Depends(lambda: app.state.host)])
