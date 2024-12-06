@@ -41,6 +41,7 @@ class MessageRequest(BaseModel):
     role: str
     content: str
 class ChatCompletionRequest(BaseModel):
+    model: str
     messages: List[MessageRequest]
     stream: Optional[bool] = False
     tools: Optional[list] = None

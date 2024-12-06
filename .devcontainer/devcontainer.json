@@ -10,8 +10,8 @@
 	// },
 	"image": "kakkoii1337/gai-ttt-llamacpp_devcontainer:latest",
 	"runArgs": [
-		"--gpus=all",
-		"--network=host"
+		"--gpus=all"
+		//"--network=host"
 	],
 	"containerEnv": {
 		"DEFAULT_GENERATOR": "ttt-llamacpp-dolphin",
