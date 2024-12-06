@@ -8,12 +8,10 @@
 	// 	},
 	// 	"context": ".."
 	// },
-	"image": "kakkoii1337/gai-ttt-llamacpp_devcontainer:1.0.1",
+	"image": "kakkoii1337/gai-ttt-llamacpp_devcontainer:latest",
 	"runArgs": [
 		"--gpus=all",
 		"--network=host"
-		// Add a custom network that shares the same address space as WSL instance
-		//"--network=gai-sandbox"
 	],
 	"containerEnv": {
 		"DEFAULT_GENERATOR": "ttt-llamacpp-dolphin",
@@ -31,7 +29,8 @@
 			},
 			"extensions": [
 				"ms-python.python",
-				"ms-toolsai.jupyter"
+				"ms-toolsai.jupyter",
+				"ms-python.debugpy"
 			]
 		}
 	},
