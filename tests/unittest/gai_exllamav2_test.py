@@ -17,7 +17,7 @@ def test_exllamav2_is_loaded_correctly():
             "temperature": 0.85,
             "top_p": 0.8,
             "top_k": 50,
-            "max_new_tokens": 1000,
+            "max_tokens": 1000,
         },
         "tool_choice": "auto",
         "max_retries": 5,
@@ -58,7 +58,7 @@ def test_exllamav2_is_loaded_correctly():
         assert exllamav2.job.gen_settings.temperature == 0.85
         assert exllamav2.job.gen_settings.top_k == 50
         assert exllamav2.job.gen_settings.top_p == 0.8
-        assert exllamav2.job.max_new_tokens == 1000
+        assert exllamav2.job.max_tokens == 1000
         assert "<s>" in exllamav2.job.stop_strings
         assert "</s>" in exllamav2.job.stop_strings
         assert "user:" in exllamav2.job.stop_strings
@@ -80,7 +80,7 @@ def test_call_tool():
             "temperature": 0.85,
             "top_p": 0.8,
             "top_k": 50,
-            "max_new_tokens": 1000,
+            "max_tokens": 1000,
         },
         "tool_choice": "auto",
         "max_retries": 5,

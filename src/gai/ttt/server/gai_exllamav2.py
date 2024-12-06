@@ -531,8 +531,8 @@ class GaiExLlamav2:
                                    stream=True)
         logger.debug(f"GaiExLlamav2.load_job: prompt={self.prompt}")
 
-        max_new_tokens=self.job_state["max_new_tokens"]
-        logger.debug(f"GaiExLlamav2.load_job: max_new_tokens={max_new_tokens}")
+        max_tokens=self.job_state["max_tokens"]
+        logger.debug(f"GaiExLlamav2.load_job: max_tokens={max_tokens}")
 
         stop_conditions=self.job_state["stop_conditions"]
         logger.debug(f"GaiExLlamav2.load_job: stop_conditions={stop_conditions}")
@@ -543,7 +543,7 @@ class GaiExLlamav2:
         self.job = ExLlamaV2DynamicJob(    
             input_ids = self.tokenizer.encode(self.prompt),
             gen_settings = settings,
-            max_new_tokens = max_new_tokens,
+            max_new_tokens = max_tokens,
             completion_only = True,
             token_healing = True,
             seed = None,
@@ -576,7 +576,7 @@ class GaiExLlamav2:
         tools:Optional[list]=None,
         tool_choice:Optional[str]=None,
         json_schema=None,
-        max_new_tokens:Optional[int]=None,
+        max_tokens:Optional[int]=None,
         stop_conditions:Optional[list]=None,
         temperature:Optional[float]=None,
         top_p:Optional[float]=None,
@@ -599,7 +599,7 @@ class GaiExLlamav2:
             "tool_choice": tool_choice or self.gai_config["tool_choice"],
             "stop_conditions": self.gai_config["stop_conditions"],
             "prompt_format": self.gai_config["prompt_format"],
-            "max_new_tokens": max_new_tokens or self.gai_config["hyperparameters"]["max_new_tokens"],
+            "max_tokens": max_tokens or self.gai_config["hyperparameters"]["max_tokens"],
             "temperature": temperature or self.gai_config["hyperparameters"]["temperature"],
             "top_p": top_p or self.gai_config["hyperparameters"]["top_p"],
             "top_k": top_k or self.gai_config["hyperparameters"]["top_k"],  
@@ -617,7 +617,7 @@ class GaiExLlamav2:
         tools:Optional[list]=None,
         tool_choice:Optional[str]=None,
         json_schema=None,
-        max_new_tokens:Optional[int]=None,
+        max_tokens:Optional[int]=None,
         stop_conditions:Optional[list]=None,
         temperature:Optional[float]=None,
         top_p:Optional[float]=None,
@@ -632,7 +632,7 @@ class GaiExLlamav2:
             tools=tools,
             tool_choice=tool_choice,
             json_schema=json_schema,
-            max_new_tokens=max_new_tokens,
+            max_tokens=max_tokens,
             stop_conditions=stop_conditions,
             temperature=temperature,
             top_p=top_p,

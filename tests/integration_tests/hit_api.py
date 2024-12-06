@@ -21,7 +21,7 @@ async def main():
     # Define the JSON payload
     json_payload = {
         "temperature": 0.2,
-        "max_new_tokens": 1000,
+        "max_tokens": 1000,
         "stream": True,
         "messages": [
             {"role": "user", "content": "Tell me a one paragraph story."},

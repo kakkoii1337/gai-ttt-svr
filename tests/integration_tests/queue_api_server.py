@@ -39,7 +39,7 @@ async def process_stream(req_id):
             "temperature": 0.85,
             "top_p": 0.8,
             "top_k": 50,
-            "max_new_tokens": 1000,
+            "max_tokens": 1000,
         },
         "tool_choice": "auto",
         "max_retries": 5,

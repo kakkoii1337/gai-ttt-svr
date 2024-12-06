@@ -47,7 +47,7 @@ class ChatCompletionRequest(BaseModel):
     tools: Optional[list] = None
     tool_choice: Optional[str] = None
     json_schema: Optional[dict] = None    
-    max_new_tokens: Optional[int] = None
+    max_tokens: Optional[int] = None
     stop_conditions: Optional[list] = None
     temperature: Optional[float] = None
     top_p: Optional[float] = None
@@ -70,7 +70,7 @@ async def process_stream(req: ChatCompletionRequest):
             tools=req.tools,
             tool_choice=req.tool_choice,
             json_schema=req.json_schema,
-            max_new_tokens=req.max_new_tokens,
+            max_tokens=req.max_tokens,
             stop_conditions=req.stop_conditions,
             temperature=req.temperature,
             top_p=req.top_p,
@@ -105,7 +105,7 @@ async def process_generate(req: ChatCompletionRequest):
             tools=req.tools,
             tool_choice=req.tool_choice,
             json_schema=req.json_schema,
-            max_new_tokens=req.max_new_tokens,
+            max_tokens=req.max_tokens,
             stop_conditions=req.stop_conditions,
             temperature=req.temperature,
             top_p=req.top_p,
@@ -139,6 +139,7 @@ if __name__ == "__main__":
     if os.getenv("DEFAULT_GENERATOR"):
         gai_config["gen"]["default"]["ttt"] = os.getenv("DEFAULT_GENERATOR")
     generator = gai_config["gen"]["default"]["ttt"]
+    logger.info(f"Using generator: {generator}")
     if os.getenv("MAX_SEQ_LEN"):
         gai_config["gen"][generator]["max_seq_len"] = int(os.getenv("MAX_SEQ_LEN"))
 

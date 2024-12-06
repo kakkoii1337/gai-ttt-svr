@@ -16,7 +16,7 @@ async def hit_api(json_payload):
 # Generate the JSON payload
 json_payload = {
     "temperature": 0.2,
-    "max_new_tokens": 1000,
+    "max_tokens": 1000,
     "stream": True,
     "messages": [
         {
