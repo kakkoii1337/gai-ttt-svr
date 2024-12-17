@@ -31,9 +31,10 @@ async def process_stream(req_id):
     from gai.lib.server.singleton_host import SingletonHost
 
     config = {
+        "name": "ttt-exllamav2-mistral7b",
         "type": "ttt",
-        "generator_name": "exllamav2-mistral7b",
-        "engine": "gai.ttt.server.GaiExLlamaV2",
+        "engine": "exllamav2",
+        "model":"dolphin",
         "model_path": "models/exllamav2-dolphin",
         "model_basename": "model",
         "max_seq_len": 8192,
@@ -43,17 +44,19 @@ async def process_stream(req_id):
             "top_p": 0.8,
             "top_k": 50,
             "max_tokens": 1000,
+            "tool_choice": "auto",
+            "max_retries": 5,
+            "stop": ["<|im_end|>", "</s>", "[/INST]"],
         },
-        "tool_choice": "auto",
-        "max_retries": 5,
-        "stop_conditions": ["<|im_end|>", "</s>", "[/INST]"],
-        "no_flash_attn":True,
-        "seed": None,
-        "decode_special_tokens": False,
-        "module_name": "gai.ttt.server.gai_exllamav2",
-        "class_name": "GaiExLlamav2",
-        "init_args": [],
-        "init_kwargs": {}
+        "extra": {
+            "no_flash_attn":True,
+            "seed": None,
+            "decode_special_tokens": False,
+        },
+        "module": {
+            "name":"gai.ttt.server.gai_exllamav2",
+            "class": "GaiExLlamav2",    
+        }
     }
     # story=""
     with SingletonHost.GetInstanceFromConfig(config,verbose=False) as host:

@@ -48,7 +48,7 @@ class ChatCompletionRequest(BaseModel):
     tool_choice: Optional[str] = None
     json_schema: Optional[dict] = None    
     max_tokens: Optional[int] = None
-    stop_conditions: Optional[list] = None
+    stop: Optional[list] = None
     temperature: Optional[float] = None
     top_p: Optional[float] = None
     top_k: Optional[int] = None
@@ -71,7 +71,7 @@ async def process_stream(req: ChatCompletionRequest):
             tool_choice=req.tool_choice,
             json_schema=req.json_schema,
             max_tokens=req.max_tokens,
-            stop_conditions=req.stop_conditions,
+            stop=req.stop,
             temperature=req.temperature,
             top_p=req.top_p,
             top_k=req.top_k
@@ -97,6 +97,7 @@ async def process_stream(req: ChatCompletionRequest):
 async def process_generate(req: ChatCompletionRequest):
     host = app.state.host
     response=None
+    
     try:
         messages = req.messages
         response = host.generator.create(
@@ -106,7 +107,7 @@ async def process_generate(req: ChatCompletionRequest):
             tool_choice=req.tool_choice,
             json_schema=req.json_schema,
             max_tokens=req.max_tokens,
-            stop_conditions=req.stop_conditions,
+            stop=req.stop,
             temperature=req.temperature,
             top_p=req.top_p,
             top_k=req.top_k
@@ -126,37 +127,17 @@ if __name__ == "__main__":
 
     import uvicorn
     from gai.lib.server import api_factory
-    from gai.lib.common import utils
+    from gai.ttt.server.config.config_utils import get_gai_config
 
-    # Check if a local gai.yml exists. If not, use the default one in ~/.gai
-    here = os.path.dirname(__file__)
-    local_config_path = os.path.join(here, "gai.yml")
-    gai_config = utils.get_gai_config()
-    if os.path.exists(local_config_path):
-        gai_config = utils.get_gai_config(local_config_path)
-
-    # Override by environment variables
-    if os.getenv("DEFAULT_GENERATOR"):
-        gai_config["gen"]["default"]["ttt"] = os.getenv("DEFAULT_GENERATOR")
-    generator = gai_config["gen"]["default"]["ttt"]
-    logger.info(f"Using generator: {generator}")
-    if os.getenv("MAX_SEQ_LEN"):
-        gai_config["gen"][generator]["max_seq_len"] = int(os.getenv("MAX_SEQ_LEN"))
+    gai_config = get_gai_config()
+    ttt_config = gai_config.ttt.configs[gai_config.ttt.default]
 
     # Log hyperparameters
     logger.info("Hyperparameters:")
-    hyperparameters=gai_config["gen"][generator]["hyperparameters"]
-    for key in hyperparameters:
-        logger.info(f"\t{key}\t: {hyperparameters[key]}")
-    stop_conditions=gai_config["gen"][generator].get("stop_conditions",None)
-    logger.info(f"\tstop_conditions\t: {stop_conditions}")
-    model_path=gai_config["gen"][generator].get("model_path",None)
-    logger.info(f"\tmodel_path\t: {model_path}")
+    logger.info(ttt_config.hyperparameters)
+    logger.info(f"\tmax_seq_len\t: {ttt_config.max_seq_len}")
 
-    max_seq_len=gai_config["gen"][generator].get("max_seq_len",None)
-    logger.info(f"\tmax_seq_len\t: {max_seq_len}")
-
-    app = api_factory.create_app(pyproject_toml, category="ttt",gai_config=gai_config)
+    app = api_factory.create_app(pyproject_toml, category="ttt",llm_config=ttt_config)
     app.include_router(router, dependencies=[Depends(lambda: app.state.host)])
     config = uvicorn.Config(
         app=app, 

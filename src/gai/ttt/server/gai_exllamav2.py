@@ -6,6 +6,7 @@ logger = getLogger(__name__)
 from jsonschema import validate, ValidationError
 from gai.lib.common.profile_function import profile_function
 from gai.ttt.server.builders import CompletionsFactory
+from gai.ttt.server.config.ttt_config import TTTConfig
 
 def correct_single_quote_json(s):
     rstr = ""
@@ -32,16 +33,15 @@ def correct_single_quote_json(s):
 
 class GaiExLlamav2:
 
-    def __init__(self, gai_config, verbose=True):
-        if (gai_config is None):
-            raise Exception("GaiExLlamav2: gai_config is required")
-        if gai_config.get("model_path",None) is None:
+    def __init__(self, llm_config:TTTConfig, verbose=True):
+        if (llm_config is None):
+            raise Exception("GaiExLlamav2: llm_config is required")
+        if llm_config.model_path is None:
             raise Exception("GaiExLlamav2: model_path is required")
         self.__verbose=verbose
-        self.gai_config = gai_config
-
+        self.gai_config = llm_config
         self.model_dir = os.path.join(get_app_path(
-        ), gai_config["model_path"])
+        ), llm_config.model_path)
         self.cache = None
         self.model = None
         self.tokenizer = None
@@ -64,8 +64,8 @@ class GaiExLlamav2:
         config=ExLlamaV2Config()
         config.model_dir = self.model_dir
         config.prepare()
-        config.max_seq_len = self.gai_config.get("max_seq_len",8192)
-        config.no_flash_attn = self.gai_config.get("no_flash_attn",True)
+        config.max_seq_len = self.gai_config.max_seq_len or 8192
+        config.no_flash_attn = self.gai_config.extra.no_flash_attn
         self.exllama_config = config
 
     @profile_function
@@ -78,7 +78,7 @@ class GaiExLlamav2:
         from exllamav2.cache import ExLlamaV2Cache_Q4
         self.cache = ExLlamaV2Cache_Q4(self.model, 
                                        lazy=True, 
-                                       max_seq_len=self.gai_config.get("max_seq_len",8192))
+                                       max_seq_len=self.gai_config.max_seq_len or 8192)
         self.model.load_autosplit(self.cache)
 
     @profile_function
@@ -293,7 +293,19 @@ class GaiExLlamav2:
                 # Apply schema. Note that tool schema will override any provided schema.
                 if schema:
                     system_message={"role":"system","content":f"""Begin your response with an open curly brace. Your response must be parseable by this json schema: {schema} """}
-                    #system_message={"role":"system","content":f"You will respond to the user's message based only on the following JSON schema {schema}. Begin your response with a curly bracket '{{' and end it with a curly bracket '}}'."}
+
+                    # Find the index of the last user message                        
+                    last_user_message_idx = -1
+                    for i in range(len(messages)-1, -1, -1):
+                        message = messages[i]
+                        if message["role"].lower() == "user":
+                            last_user_message_idx = i
+                            break
+                    if last_user_message_idx > -1:
+                        message = messages[last_user_message_idx]
+                        if message["content"]:
+                            from gai.lib.common import utils
+                            message["content"] = utils.clean_string(message["content"])
 
                     # Merge the schema prompt with the last system message instead of having an extra system message
                     messages = merge_system_messages(messages, system_message)
@@ -534,8 +546,8 @@ class GaiExLlamav2:
         max_tokens=self.job_state["max_tokens"]
         logger.debug(f"GaiExLlamav2.load_job: max_tokens={max_tokens}")
 
-        stop_conditions=self.job_state["stop_conditions"]
-        logger.debug(f"GaiExLlamav2.load_job: stop_conditions={stop_conditions}")
+        stop=self.job_state["stop"]
+        logger.debug(f"GaiExLlamav2.load_job: stop={stop}")
         
         logger.debug(f"GaiExLlamav2.load_job: temperature={settings.temperature}")
 
@@ -547,9 +559,8 @@ class GaiExLlamav2:
             completion_only = True,
             token_healing = True,
             seed = None,
-            stop_conditions=stop_conditions,
+            stop_conditions=stop,
             add_bos=False,
-            #encode_special_tokens=self.job_state["encode_special_tokens"],
             decode_special_tokens=self.job_state["decode_special_tokens"],
         )
         # for pending in self.generator.pending_jobs:
@@ -577,7 +588,7 @@ class GaiExLlamav2:
         tool_choice:Optional[str]=None,
         json_schema=None,
         max_tokens:Optional[int]=None,
-        stop_conditions:Optional[list]=None,
+        stop:Optional[list]=None,
         temperature:Optional[float]=None,
         top_p:Optional[float]=None,
         top_k:Optional[int]=None,
@@ -585,26 +596,28 @@ class GaiExLlamav2:
         ):
         logger.info("gai_exllamav2.create: Initializing job_state.")
 
-        if self.tokenizer.eos_token_id not in self.gai_config["stop_conditions"]:
-            self.gai_config["stop_conditions"].append(self.tokenizer.eos_token_id)
-        for stop_condition in stop_conditions or []:
-            if stop_condition not in self.gai_config["stop_conditions"]:
-                self.gai_config["stop_conditions"].append(stop_condition)
+        # Include eos_token_id in stop conditions
+        if self.tokenizer.eos_token_id not in self.gai_config.hyperparameters.stop:
+            self.gai_config.hyperparameters.stop.append(self.tokenizer.eos_token_id)
+        # Add stop conditions instead of replacing them
+        for stop_condition in stop or []:
+            if stop_condition not in self.gai_config.hyperparameters.stop:
+                self.gai_config.hyperparameters.stop.append(stop_condition)
 
         self.job_state = {
             "messages": messages,
             "stream": stream,
             "tools": tools,
             "json_schema": json_schema,
-            "tool_choice": tool_choice or self.gai_config["tool_choice"],
-            "stop_conditions": self.gai_config["stop_conditions"],
-            "prompt_format": self.gai_config["prompt_format"],
-            "max_tokens": max_tokens or self.gai_config["hyperparameters"]["max_tokens"],
-            "temperature": temperature or self.gai_config["hyperparameters"]["temperature"],
-            "top_p": top_p or self.gai_config["hyperparameters"]["top_p"],
-            "top_k": top_k or self.gai_config["hyperparameters"]["top_k"],  
-            "max_retries": max_retries or self.gai_config["max_retries"],
-            "decode_special_tokens": self.gai_config["decode_special_tokens"]
+            "tool_choice": tool_choice or self.gai_config.hyperparameters.tool_choice,
+            "stop": stop or self.gai_config.hyperparameters.stop,
+            "prompt_format": self.gai_config.prompt_format,
+            "max_tokens": max_tokens or self.gai_config.hyperparameters.max_tokens,
+            "temperature": temperature or self.gai_config.hyperparameters.temperature,
+            "top_p": top_p or self.gai_config.hyperparameters.top_p,
+            "top_k": top_k or self.gai_config.hyperparameters.top_k,  
+            "max_retries": max_retries or self.gai_config.hyperparameters.max_retries,
+            "decode_special_tokens": self.gai_config.extra.decode_special_tokens
         }
         if self.is_validation_required(self.job_state):
             if self.job_state["stream"]:
@@ -618,7 +631,7 @@ class GaiExLlamav2:
         tool_choice:Optional[str]=None,
         json_schema=None,
         max_tokens:Optional[int]=None,
-        stop_conditions:Optional[list]=None,
+        stop:Optional[list]=None,
         temperature:Optional[float]=None,
         top_p:Optional[float]=None,
         top_k:Optional[int]=None,
@@ -633,7 +646,7 @@ class GaiExLlamav2:
             tool_choice=tool_choice,
             json_schema=json_schema,
             max_tokens=max_tokens,
-            stop_conditions=stop_conditions,
+            stop=stop,
             temperature=temperature,
             top_p=top_p,
             top_k=top_k,

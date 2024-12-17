@@ -2,31 +2,33 @@ from gai.ttt.server.singleton_host import SingletonHost
 from gai.lib.common.utils import free_mem
 from gai.lib.common import utils
 import os
+from gai.ttt.server.config.ttt_config import TTTConfig
 
 def test_exllamav2_is_loaded_correctly():
     # arrange
-    config = {
-        "type": "ttt",
-        "generator_name": "exllamav2-mistral7b",
-        "engine": "gai.ttt.server.GaiExLlamaV2",
-        "model_path": "models/exllamav2-mistral7b",
-        "model_basename": "model",
-        "max_seq_len": 8192,
-        "prompt_format": "mistral",
-        "hyperparameters": {
+    ttt_config = TTTConfig(
+        type="ttt",
+        engine="llamacpp",
+        model="dolphin",
+        name="ttt-exllamav2-dolphin",
+        model_filepath="models/llamacpp-dolphin/dolphin-2.9.3-mistral-7B-32k-Q4_K_M.gguf",
+        max_seq_len=4096,
+        prompt_format="mistral",
+        hyperparameters={
             "temperature": 0.85,
             "top_p": 0.8,
             "top_k": 50,
             "max_tokens": 1000,
+            "tool_choice": "auto",
+            "max_retries": 5,
+            "stop": ["<|im_end|>", "</s>", "[/INST]"],
         },
-        "tool_choice": "auto",
-        "max_retries": 5,
-        "stop_conditions": ["<s>", "</s>", "user:"],
-        "no_flash_attn":True,
-        "seed": None,
-        "decode_special_tokens": False,
-    }
-    with SingletonHost.GetInstanceFromConfig(config) as host:
+        module={
+            "name": "gai.ttt.server.gai_llamacpp",
+            "class": "GaiLlamaCpp"
+        }
+    )
+    with SingletonHost.GetInstanceFromConfig(ttt_config) as host:
 
         # act: without AI placeholder
         try:
@@ -49,7 +51,7 @@ def test_exllamav2_is_loaded_correctly():
         # assert: config
         assert exllamav2.exllama_config.max_seq_len == 8192
         assert exllamav2.exllama_config.no_flash_attn == True
-        assert exllamav2.exllama_config.model_dir == os.path.expanduser("~/.gai/models/exllamav2-mistral7b")
+        assert exllamav2.exllama_config.model_dir == os.path.expanduser("~/.gai/models/exllamav2-dolphin")
 
         # assert: cache
         assert exllamav2.cache.max_seq_len == 8192
@@ -68,28 +70,29 @@ def test_exllamav2_is_loaded_correctly():
     free_mem()
 
 def test_call_tool():
-    config = {
-        "type": "ttt",
-        "generator_name": "exllamav2-mistral7b",
-        "engine": "gai.ttt.server.GaiExLlamaV2",
-        "model_path": "models/exllamav2-mistral7b",
-        "model_basename": "model",
-        "max_seq_len": 8192,
-        "prompt_format": "mistral",
-        "hyperparameters": {
+    ttt_config = TTTConfig(
+        type="ttt",
+        engine="llamacpp",
+        model="dolphin",
+        name="ttt-exllamav2-dolphin",
+        model_filepath="models/llamacpp-dolphin/dolphin-2.9.3-mistral-7B-32k-Q4_K_M.gguf",
+        max_seq_len=4096,
+        prompt_format="mistral",
+        hyperparameters={
             "temperature": 0.85,
             "top_p": 0.8,
             "top_k": 50,
             "max_tokens": 1000,
+            "tool_choice": "auto",
+            "max_retries": 5,
+            "stop": ["<|im_end|>", "</s>", "[/INST]"],
         },
-        "tool_choice": "auto",
-        "max_retries": 5,
-        "stop_conditions": ["<s>", "</s>", "user:"],
-        "no_flash_attn":True,
-        "seed": None,
-        "decode_special_tokens": False,
-    }
-    with SingletonHost.GetInstanceFromConfig(config) as completions:
+        module={
+            "name": "gai.ttt.server.gai_llamacpp",
+            "class": "GaiLlamaCpp"
+        }
+    )
+    with SingletonHost.GetInstanceFromConfig(ttt_config) as completions:
         messages = [
             {"role":"user","content":"What is the current time in Singapore?"},
             {"role":"assistant","content":""}

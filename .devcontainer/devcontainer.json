@@ -16,7 +16,6 @@
 		//"--network=gai-sandbox"
 	],
 	"containerEnv": {
-		"DEFAULT_GENERATOR": "ttt-exllamav2-mistral7b",
 		"MAX_SEQ_LEN": "8192"
 	},
 	"mounts": [

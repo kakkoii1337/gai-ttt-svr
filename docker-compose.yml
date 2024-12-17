@@ -2,7 +2,7 @@ services:
     gai-ttt-svr-exllamav2:
         image: kakkoii1337/gai-ttt-svr-exllamav2:1.0.8
         environment:
-            DEFAULT_GENERATOR: "ttt-exllamav2-mistral7b"
+            DEFAULT_GENERATOR: "ttt-exllamav2-dolphin"
             LOG_LEVEL: "DEBUG"
             TZ: "Asia/Singapore"
             SWAGGER_URL: "/doc"
