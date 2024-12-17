@@ -13,7 +13,7 @@ from llama_cpp import Llama, LlamaGrammar
 # from gai.gen.ttt.ChunkOutputBuilder import ChunkOutputBuilder
 from gai.lib.common.profile_function import profile_function
 from gai.ttt.server.builders import CompletionsFactory
-
+from gai.ttt.server.config.ttt_config import TTTConfig
 
 class GaiLlamaCpp:
     param_whitelist=[
@@ -27,21 +27,19 @@ class GaiLlamaCpp:
         'json_schema'
         ]
 
-    def __init__(self,gai_config,verbose=True):
-        if (gai_config is None):
+    def __init__(self,llm_config:TTTConfig,verbose=True):
+        if (llm_config is None):
             raise Exception("gai_llamacpp: gai_config is required")
-        if gai_config.get("model_filepath",None) is None:
+        if llm_config.model_filepath is None:
             raise Exception("gai_llamacpp: model_filepath is required")
         self.__verbose=verbose
-        self.gai_config = gai_config
-        
-        self.model_filepath = os.path.join(get_app_path(
-            ), gai_config["model_filepath"])
+        self.gai_config = llm_config
+        self.model_filepath = os.path.join(get_app_path(), llm_config.model_filepath)
         self.client = None
 
     def load(self):
         logger.info(f"gai_llamacpp.load: Loading model from {self.model_filepath}")
-        self.client = Llama(model_path=self.model_filepath, verbose=False, n_ctx=self.gai_config["max_seq_len"])
+        self.client = Llama(model_path=self.model_filepath, verbose=False, n_ctx=self.gai_config.max_seq_len)
         self.client.verbose=False
         return self
 
@@ -87,15 +85,15 @@ class GaiLlamaCpp:
             self.load()
 
         # temperature
-        temperature=temperature or self.gai_config["hyperparameters"].get("temperature",0.2)
+        temperature=temperature or self.gai_config.hyperparameters.temperature
         # top_k
-        top_k=top_k or self.gai_config["hyperparameters"].get("top_k",40)
+        top_k=top_k or self.gai_config.hyperparameters.top_k
         # top_p
-        top_p=top_p or self.gai_config["hyperparameters"].get("top_p",0.95)
+        top_p=top_p or self.gai_config.hyperparameters.top_p
         # max_tokens
-        max_tokens=max_tokens or self.gai_config["hyperparameters"].get("max_tokens",100)
+        max_tokens=max_tokens or self.gai_config.hyperparameters.max_tokens
         # stop
-        stop=stop or self.gai_config.get("stop",None)
+        stop=stop or self.gai_config.hyperparameters.stop
 
         # messages -> list
         if isinstance(messages,str):
@@ -125,11 +123,8 @@ class GaiLlamaCpp:
             "stop": stop,
             "seed": seed,
             "stream": stream,
-            "tool_choice": tool_choice
+            "tool_choice": tool_choice,
         }
-        stream=kwargs.get("stream")
-        tools=kwargs.get("tools")
-        json_schema=kwargs.get("json_schema")
         if stream and not tools and not json_schema:
             response = (chunk for chunk in self.client.create_chat_completion(**kwargs))    
         response = self.client.create_chat_completion(**kwargs)

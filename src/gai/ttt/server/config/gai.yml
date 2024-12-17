@@ -1,0 +1,54 @@
+version: 1.1
+gai_url: "http://localhost:12033"
+logging:
+    level: "INFO"
+    format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+    datefmt: "%Y-%m-%d %H:%M:%S"
+    filename: ""
+    filemode: "a"
+    stream: "stdout"
+    loggers:
+        gai.ttt: "DEBUG"
+        gai.common.http_utils: "DEBUG"
+generators:
+    ttt:
+        default: "ttt-llamacpp-dolphin"
+        configs:
+            ttt-llamacpp-dolphin:
+                type: "ttt"
+                engine: "llamacpp"
+                model: "dolphin"
+                name: "ttt-llamacpp-dolphin"
+                model_filepath: "models/llamacpp-dolphin/dolphin-2.9.3-mistral-7B-32k-Q4_K_M.gguf"
+                max_seq_len: 4096
+                prompt_format: "mistral"
+                hyperparameters:
+                    temperature: 0.85
+                    top_p: 0.8
+                    top_k: 50
+                    max_tokens: 1000
+                    tool_choice: "auto"
+                    max_retries: 5
+                    stop: ["<|im_end|>", "</s>", "[/INST]"]
+                module:
+                    name: "gai.ttt.server.gai_llamacpp"
+                    class: "GaiLlamaCpp"
+            ttt-llamacpp-mistral7b:
+                type: "ttt"
+                engine: "llamacpp"
+                model: "mistral7b"
+                name: "ttt-llamacpp-mistral7b"
+                model_filepath: "models/llamacpp-mistral7b/Mistral-7B-Instruct-v0.3-Q4_K_M.gguf"
+                max_seq_len: 4096
+                prompt_format: "mistral"
+                hyperparameters:
+                    temperature: 0.85
+                    top_p: 0.8
+                    top_k: 50
+                    max_tokens: 1000
+                    tool_choice: "auto"
+                    max_retries: 5
+                    stop: ["<|im_end|>", "</s>", "[/INST]"]
+                module:
+                    name: "gai.ttt.server.gai_llamacpp"
+                    class: "GaiLlamaCpp"
