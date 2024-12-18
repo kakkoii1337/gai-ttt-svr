@@ -1,7 +1,7 @@
 from typing import List, Dict, Optional, Any
 from pydantic import BaseModel, Field
 import yaml
-from gai.lib.config.gai_config import ServerLLMConfigBase
+from gai.lib.config.pydantic.gai_config import ServerLLMConfigBase
 
 # ---------------------------
 # Pydantic Models

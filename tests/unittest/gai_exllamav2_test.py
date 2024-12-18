@@ -2,7 +2,7 @@ from gai.ttt.server.singleton_host import SingletonHost
 from gai.lib.common.utils import free_mem
 from gai.lib.common import utils
 import os
-from gai.ttt.server.config.ttt_config import TTTConfig
+from gai.ttt.server.config.pydantic.ttt_config import TTTConfig
 
 def test_exllamav2_is_loaded_correctly():
     # arrange

@@ -6,7 +6,7 @@ logger = getLogger(__name__)
 from jsonschema import validate, ValidationError
 from gai.lib.common.profile_function import profile_function
 from gai.ttt.server.builders import CompletionsFactory
-from gai.ttt.server.config.ttt_config import TTTConfig
+from gai.ttt.server.config.pydantic.ttt_config import TTTConfig
 
 def correct_single_quote_json(s):
     rstr = ""
