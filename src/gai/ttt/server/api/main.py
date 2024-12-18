@@ -86,11 +86,10 @@ if __name__ == "__main__":
 
     import uvicorn
     from gai.lib.server import api_factory
-    from gai.ttt.server.config.config_utils import get_gai_config
+    from gai.ttt.server.config.server_config_utils import get_llm_config
 
     # Check if spec exists in gai.yml
-    gai_config = get_gai_config()
-    ttt_config = gai_config.ttt.configs[gai_config.ttt.default]
+    ttt_config = get_llm_config("ttt")    
 
     # Log hyperparameters
     logger.info("Hyperparameters:")

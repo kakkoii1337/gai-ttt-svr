@@ -15,7 +15,7 @@ class OutputMessageBuilder:
     Example: Used by generating text generation and text streaming output.
     """
 
-    def build_toolcall(self,result):
+    def build_toolcall(self,result,generator_name="llamacpp"):
         state = "function_name"
         eos_reason=result["choices"][0]["finish_reason"]
         content=result["choices"][0]["message"]["content"]
@@ -56,7 +56,7 @@ class OutputMessageBuilder:
                         return None
 
                     return OutputMessageBuilder(
-                        ).add_chat_completion(generator="llamacpp-mistral7b"
+                        ).add_chat_completion(generator_name=generator_name
                             ).add_choice(finish_reason='tool_calls'
                                 ).add_tool(
                                     function_name=function_name,
@@ -70,14 +70,14 @@ class OutputMessageBuilder:
 
 
 
-    def build_content(self,result):
+    def build_content(self,result,generator_name="llamacpp"):
         eos_reason=result["choices"][0]["finish_reason"]
         content=result["choices"][0]["message"]["content"]
         prompt_tokens=result["usage"]["prompt_tokens"]
         total_tokens=result["usage"]["total_tokens"]
         new_tokens=total_tokens-prompt_tokens
         return OutputMessageBuilder(
-            ).add_chat_completion(generator="llamacpp-mistral7b"
+            ).add_chat_completion(generator_name=generator_name
                 ).add_choice(finish_reason=eos_reason,logprobs=None
                     ).add_content(
                         content=content
@@ -95,7 +95,7 @@ class OutputMessageBuilder:
     def generate_toolcall_id(self):
         return "call_"+str(uuid4())
 
-    def add_chat_completion(self,generator):
+    def add_chat_completion(self,generator_name):
         try:
             chatcompletion_id = self.generate_chatcompletion_id()
             created = self.generate_creationtime()
@@ -103,7 +103,7 @@ class OutputMessageBuilder:
                 id=chatcompletion_id,
                 choices=[],
                 created=created,
-                model=generator,
+                model=generator_name,
                 object='chat.completion',
                 usage=None
             )

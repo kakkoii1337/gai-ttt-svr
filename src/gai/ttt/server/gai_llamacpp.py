@@ -13,7 +13,7 @@ from llama_cpp import Llama, LlamaGrammar
 # from gai.gen.ttt.ChunkOutputBuilder import ChunkOutputBuilder
 from gai.lib.common.profile_function import profile_function
 from gai.ttt.server.builders import CompletionsFactory
-from gai.ttt.server.config.ttt_config import TTTConfig
+from gai.ttt.server.config.pydantic.ttt_config import TTTConfig
 
 class GaiLlamaCpp:
     param_whitelist=[

@@ -1,7 +1,7 @@
 from typing import List, Dict, Optional, Any
 from pydantic import BaseModel, Field
 import yaml
-from gai.lib.config.gai_config import ServerLLMConfigBase
+from gai.lib.config.pydantic.gai_config import ServerLLMConfigBase
 
 # ---------------------------
 # Pydantic Models
@@ -40,18 +40,18 @@ class TTTConfig(ServerLLMConfigBase):
     hyperparameters: Hyperparameters
     extra: Optional[ExtraConfig] = None
 
-class TTTSpecConfig(BaseModel):
+class TTTCategoryConfig(BaseModel):
     default: str=None
     configs: Optional[Dict[str,TTTConfig]]={}
 
 class ServerConfig(BaseModel):
-    ttt: TTTSpecConfig
+    ttt: TTTCategoryConfig
         
     @classmethod
     def from_config(cls, config: dict):
         # Preprocess the config and initialize the object
         config= cls(
-            ttt=TTTSpecConfig(**config["generators"]["ttt"]),
+            ttt=TTTCategoryConfig(**config["generators"]["ttt"]),
         )
         return config
     

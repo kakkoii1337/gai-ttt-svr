@@ -2,19 +2,6 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Python Debugger: gai-ttt server (mistral7b)",
-            "type": "debugpy",
-            "request": "launch",
-            "console": "integratedTerminal",
-            "args": [],
-            "env": {
-                "PYTHONUNBUFFERED": "1",
-                "DEFAULT_GENERATOR": "ttt-llamacpp-mistral7b",
-            },
-            "program": "${workspaceFolder}/src/gai/ttt/server/api/main.py",
-            "justMyCode": false
-        },
-        {
             "name": "Python Debugger: gai-ttt server (dolphin)",
             "type": "debugpy",
             "request": "launch",

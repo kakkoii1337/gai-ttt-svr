@@ -5,7 +5,7 @@ from uuid import uuid4
 
 class OutputChunkBuilder:
 
-    def build_content(self,result):
+    def build_content(self,result,generator_name="llamacpp"):
         if (result is None):
             return None
 
@@ -14,21 +14,21 @@ class OutputChunkBuilder:
 
         if (content is None):
             return OutputChunkBuilder(
-                ).add_chunk(generator="llamacpp-mistral7b"
+                ).add_chunk(generator=generator_name
                     ).add_chunk_choice_delta(finish_reason=None, role="assistant"
                         ).add_chunk_choice_delta_content(content=''
                             ).build()
 
         if (type(content) is str):
             return OutputChunkBuilder(
-                ).add_chunk(generator="llamacpp-mistral7b"
+                ).add_chunk(generator=generator_name
                     ).add_chunk_choice_delta(finish_reason=None, role=None
                         ).add_chunk_choice_delta_content(content=content
                             ).build()
 
         if (finish_reason):
             return OutputChunkBuilder(
-                ).add_chunk(generator="llamacpp-mistral7b"
+                ).add_chunk(generator=generator_name
                     ).add_chunk_choice_delta(finish_reason=finish_reason, role=None
                         ).build()
 
