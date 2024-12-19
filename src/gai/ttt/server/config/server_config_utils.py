@@ -27,6 +27,9 @@ def get_llm_config(config_type_or_name:str, file_path:str=None) -> TTTConfig:
         gai_config["generators"]["ttt"]["configs"][name]=default_config["generators"]["ttt"]["configs"][name]
         save_gai_config(gai_config)
 
+    if not gai_config["generators"]["ttt"].get("configs"):
+        gai_config["generators"]["ttt"]["configs"] = {}
+
     for server_config in default_config["generators"]["ttt"]["configs"]:
         if not gai_config["generators"]["ttt"]["configs"].get(server_config):
             create_server_config(server_config)

@@ -1,6 +1,6 @@
 services:
   gai-ttt-svr-llamacpp:
-    image: kakkoii1337/gai-ttt-svr-llamacpp:1.0.10
+    image: kakkoii1337/gai-ttt-svr-llamacpp:1.0.13
     environment:
       DEFAULT_GENERATOR: "ttt-llamacpp-dolphin"
       SWAGGER_URL: "/doc"

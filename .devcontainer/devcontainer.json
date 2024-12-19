@@ -1,27 +1,13 @@
+//https://github.com/microsoft/vscode-dev-containers/blob/main/container-templates/docker-compose/.devcontainer/devcontainer.json
+//https://github.com/microsoft/vscode-dev-containers/blob/main/containers/python-3/.devcontainer/devcontainer.json
 {
 	"name": "gai-ttt-svr-llamacpp",
-	// "build": {
-	// 	"dockerfile": "Dockerfile.devcontainer",
-	// 	"args": {
-	// 		"USERNAME": "kakkoii1337",
-	// 		"CACHEBUST": "1"
-	// 	},
-	// 	"context": ".."
-	// },
-	"image": "kakkoii1337/gai-ttt-llamacpp_devcontainer:latest",
-	"runArgs": [
-		"--gpus=all"
-		//"--network=host"
+	"dockerComposeFile": [
+		"docker-compose.yml"
 	],
-	"containerEnv": {
-		"DEFAULT_GENERATOR": "ttt-llamacpp-dolphin",
-		"MAX_SEQ_LEN": "4096"
-	},
-	"mounts": [
-		"source=${localEnv:HOME}/.gai,target=/home/kakkoii1337/.gai,type=bind,consistency=cached",
-		"source=${localEnv:HOME}/.cache,target=/home/kakkoii1337/.cache,type=bind,consistency=cached",
-		"source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind"
-	],
+	"service": "devcontainer",
+	// Make sure this matches the bind mount in docker-compose.yml
+	"workspaceFolder": "/workspaces/gai-ttt-svr",
 	"customizations": {
 		"vscode": {
 			"settings": {
@@ -34,9 +20,6 @@
 			]
 		}
 	},
-	"forwardPorts": [
-		12031
-	],
 	"features": {
 		"ghcr.io/devcontainers/features/docker-in-docker:1": {
 			"version": "latest",
