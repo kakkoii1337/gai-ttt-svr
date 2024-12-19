@@ -1,0 +1,28 @@
+services:
+    devcontainer:
+        image: kakkoii1337/gai-ttt-exllamav2_devcontainer:1.0.2
+        # build:
+        #     context: ..
+        #     dockerfile: .devcontainer/Dockerfile.devcontainer
+        #     args:
+        #         USERNAME: "kakkoii1337"
+        #         CACHE_BUST: "1.0.153"
+        deploy:
+            resources:
+                reservations:
+                    devices:
+                        - driver: nvidia
+                          capabilities: [gpu]
+        ports:
+            - "12031:12031"
+        environment:
+            LOG_LEVEL: "DEBUG"
+            DEFAULT_GENERATOR: "ttt-exllamav2-dolphin"
+            MAX_SEQ_LEN: "4096"
+        volumes:
+            # Make sure this matches the workspaceFolder in .devcontainer/devcontainer.json
+            - $HOME/.gai:/$HOME/.gai
+            - ..:/workspaces/gai-ttt-svr:cached
+            - /var/run/docker.sock:/var/run/docker.sock
+        # Overrides default command so things don't shut down after the process ends.
+        command: sleep infinity

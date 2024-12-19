@@ -1,28 +1,13 @@
+//https://github.com/microsoft/vscode-dev-containers/blob/main/container-templates/docker-compose/.devcontainer/devcontainer.json
+//https://github.com/microsoft/vscode-dev-containers/blob/main/containers/python-3/.devcontainer/devcontainer.json
 {
 	"name": "gai-ttt-svr-exllamav2",
-	"image": "kakkoii1337/gai-ttt-exllamav2_devcontainer:1.0.2",
-	// "build": {
-	// 	"dockerfile": "Dockerfile.devcontainer",
-	// 	"args": {
-	// 		"USERNAME": "kakkoii1337",
-	// 		"CACHEBUST": "1"
-	// 	},
-	// 	"context": ".."
-	// },
-	"runArgs": [
-		"--gpus=all",
-		"--network=host"
-		// Add a custom network that shares the same address space as WSL instance
-		//"--network=gai-sandbox"
+	"dockerComposeFile": [
+		"docker-compose.yml"
 	],
-	"containerEnv": {
-		"MAX_SEQ_LEN": "8192"
-	},
-	"mounts": [
-		"source=${localEnv:HOME}/.gai,target=/home/kakkoii1337/.gai,type=bind,consistency=cached",
-		"source=${localEnv:HOME}/.cache,target=/home/kakkoii1337/.cache,type=bind,consistency=cached",
-		"source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind"
-	],
+	"service": "devcontainer",
+	// Make sure this matches the bind mount in docker-compose.yml
+	"workspaceFolder": "/workspaces/gai-ttt-svr",
 	"customizations": {
 		"vscode": {
 			"settings": {
@@ -30,15 +15,13 @@
 			},
 			"extensions": [
 				"ms-python.python",
-				"ms-toolsai.jupyter"
+				"ms-toolsai.jupyter",
+				"ms-python.debugpy"
 			]
 		}
 	},
-	"forwardPorts": [
-		12031
-	],
 	"features": {
-		"ghcr.io/devcontainers/features/docker-in-docker:2.11.0": {
+		"ghcr.io/devcontainers/features/docker-in-docker:1": {
 			"version": "latest",
 			"moby": true
 		}

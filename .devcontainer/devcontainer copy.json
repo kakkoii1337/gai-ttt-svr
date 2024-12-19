@@ -1,0 +1,48 @@
+{
+	"name": "gai-ttt-svr-exllamav2",
+	"image": "kakkoii1337/gai-ttt-exllamav2_devcontainer:1.0.2",
+	// "build": {
+	// 	"dockerfile": "Dockerfile.devcontainer",
+	// 	"args": {
+	// 		"USERNAME": "kakkoii1337",
+	// 		"CACHEBUST": "1"
+	// 	},
+	// 	"context": ".."
+	// },
+	"runArgs": [
+		"--gpus=all",
+		"--network=host"
+		// Add a custom network that shares the same address space as WSL instance
+		//"--network=gai-sandbox"
+	],
+	"containerEnv": {
+		"MAX_SEQ_LEN": "8192"
+	},
+	"mounts": [
+		"source=${localEnv:HOME}/.gai,target=/home/kakkoii1337/.gai,type=bind,consistency=cached",
+		"source=${localEnv:HOME}/.cache,target=/home/kakkoii1337/.cache,type=bind,consistency=cached",
+		"source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind"
+	],
+	"customizations": {
+		"vscode": {
+			"settings": {
+				"terminal.integrated.shell.linux": "/bin/bash"
+			},
+			"extensions": [
+				"ms-python.python",
+				"ms-toolsai.jupyter"
+			]
+		}
+	},
+	"forwardPorts": [
+		12031
+	],
+	"features": {
+		"ghcr.io/devcontainers/features/docker-in-docker:2.11.0": {
+			"version": "latest",
+			"moby": true
+		}
+	},
+	"remoteUser": "kakkoii1337",
+	"postCreateCommand": "/bin/bash ${HOME}/postCreateCommand.sh"
+}
